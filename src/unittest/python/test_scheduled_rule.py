@@ -1,9 +1,9 @@
-import json
+from unittest import TestCase
 
-import pytest
+import pytest, json
 
-from aws_lambdahelper.configrule import AWSConfigRule
-from aws_lambdahelper.evaluation import CompliantEvaluation
+from awslambdahelper.configrule import AWSConfigRule
+from awslambdahelper.evaluation import CompliantEvaluation
 
 
 @pytest.mark.parametrize('lambda_event,put_evaluations_response', [
@@ -42,7 +42,7 @@ from aws_lambdahelper.evaluation import CompliantEvaluation
 ])
 def test_schedule_event(mocker, lambda_event, put_evaluations_response):
     class MockScheduleRule(AWSConfigRule):
-        def find_violation_scheduled(self, rule_parameters,accountid):
+        def find_violation_scheduled(self, rule_parameters, accountid):
             return [CompliantEvaluation(
                 ResourceType="AWS::EC2::Instance",
                 ResourceId="i-00000000"

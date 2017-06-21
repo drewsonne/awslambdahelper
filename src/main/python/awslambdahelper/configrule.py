@@ -2,7 +2,7 @@ import json
 
 import boto3
 
-from aws_lambdahelper.evaluation import NotApplicableEvaluation
+from awslambdahelper.evaluation import NotApplicableEvaluation
 
 
 class AWSConfigRule(object):
@@ -29,9 +29,9 @@ class AWSConfigRule(object):
     def lambda_handler(self, event, context):
         """
         See Event Attributes in http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html#w2ab1c13c33c27c15c15
-        :param event: 
-        :param context: 
-        :return: 
+        :param event:
+        :param context:
+        :return:
         """
         invoking_event = json.loads(event["invokingEvent"])
         rule_parameters = json.loads(event["ruleParameters"])
@@ -93,12 +93,6 @@ class AWSConfigRule(object):
         return violations
 
     def find_violation_config_change(self, config, rule_parameters):
-        """
-        
-        :param param: 
-        :param rule_parameters: 
-        :return: 
-        """
         raise UnimplementedMethod(type(self).__name__ + ":find_violation_config_change() is not implemented.")
 
     def find_violation_scheduled(self, rule_parameters, accountid):
