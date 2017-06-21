@@ -13,7 +13,7 @@ install:
   - pyb -v install_dependencies
 
 script:
-  - pyb -v run_unit_tests
+  - pyb -v analyze
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
