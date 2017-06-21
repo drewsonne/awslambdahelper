@@ -2,10 +2,24 @@ import json
 
 import boto3
 
+from awsconfig_lambdahelper.evaluation import NotApplicableEvaluation
+
 
 class AWSConfigRule(object):
+    CALL_TYPE_CONFIGURATION_CHANGE = 'ConfigurationItemChangeNotification'
+    CALL_TYPE_SCHEDULED = 'ScheduledNotification'
+
     def __init__(self, applicable_resources):
         self.applicable_resources = applicable_resources
+        self.call_type = None
+
+    @property
+    def is_config_change_call(self):
+        return self.call_type == self.CALL_TYPE_CONFIGURATION_CHANGE
+
+    @property
+    def is_scheduled_call(self):
+        return self.call_type == self.CALL_TYPE_SCHEDULED
 
     def put_evaluations(self, *args, **kwargs):
         return boto3.client("config").put_evaluations(
@@ -13,59 +27,82 @@ class AWSConfigRule(object):
         )
 
     def lambda_handler(self, event, context):
+        """
+        See Event Attributes in http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html#w2ab1c13c33c27c15c15
+        :param event: 
+        :param context: 
+        :return: 
+        """
         invoking_event = json.loads(event["invokingEvent"])
-        configuration_item = invoking_event["configurationItem"]
         rule_parameters = json.loads(event["ruleParameters"])
+
+        self.call_type = invoking_event['messageType']
 
         result_token = "No token found."
         if "resultToken" in event:
             result_token = event["resultToken"]
 
-        evaluation = self.evaluate_compliance(configuration_item, rule_parameters)
+        evaluations = []
+
+        if self.is_config_change_call:
+
+            configurationItem = invoking_event["configurationItem"]
+            evaluation_responses = self.evaluate_compliance(
+                config=configurationItem,
+                rule_parameters=rule_parameters,
+                event=event
+            )
+
+            for evaluation_response in evaluation_responses:
+                evaluation = evaluation_response.append(
+                    ResourceType=configurationItem["resourceType"],
+                    ResourceId=configurationItem["resourceId"],
+                    OrderingTimestamp=configurationItem["configurationItemCaptureTime"]
+                ).to_dict()
+                evaluations.append(evaluation)
+        else:
+            evaluation_responses = self.evaluate_compliance(
+                rule_parameters=rule_parameters,
+                event=event
+            )
+
+            for evaluation_response in evaluation_responses:
+                evaluations.append(evaluation_response.append(
+                    OrderingTimestamp=invoking_event["notificationCreationTime"]
+                ).to_dict())
 
         self.put_evaluations(
-            Evaluations=[
-                {
-                    "ComplianceResourceType":
-                        configuration_item["resourceType"],
-                    "ComplianceResourceId":
-                        configuration_item["resourceId"],
-                    "ComplianceType":
-                        evaluation["compliance_type"],
-                    "Annotation":
-                        evaluation["annotation"],
-                    "OrderingTimestamp":
-                        configuration_item["configurationItemCaptureTime"]
-                },
-            ],
+            Evaluations=evaluations,
             ResultToken=result_token
         )
 
-    def evaluate_compliance(self, configuration_item, rule_parameters):
-        if configuration_item["resourceType"] not in self.applicable_resources:
-            return {
-                "compliance_type": "NOT_APPLICABLE",
-                "annotation": "The rule doesn't apply to resources of type " +
-                              configuration_item["resourceType"] + "."
-            }
+    def evaluate_compliance(self, rule_parameters, event, config=None):
+        if self.is_config_change_call:
+            if config["resourceType"] not in self.applicable_resources:
+                return [NotApplicableEvaluation(
+                    ResourceType=config["resourceType"],
+                )]
 
-        violation = self.find_violation(
-            configuration_item["configuration"].get("ipPermissions"),
-            rule_parameters
-        )
+            violations = self.find_violation_config_change(
+                config,
+                rule_parameters
+            )
+        else:
+            violations = self.find_violation_scheduled(rule_parameters=rule_parameters, accountid=event['accountId'])
 
-        if violation:
-            return {
-                "compliance_type": "NON_COMPLIANT",
-                "annotation": violation
-            }
-        return {
-            "compliance_type": "COMPLIANT",
-            "annotation": "This resource is compliant with the rule."
-        }
+        return violations
 
-    def find_violation(self, param, rule_parameters):
-        raise UnimplementedMethod(type(self).__name__ + ":find_violation() is not implemented.")
+    def find_violation_config_change(self, config, rule_parameters):
+        """
+        
+        :param param: 
+        :param rule_parameters: 
+        :return: 
+        """
+        raise UnimplementedMethod(type(self).__name__ + ":find_violation_config_change() is not implemented.")
+
+    def find_violation_scheduled(self, rule_parameters, accountid):
+        raise UnimplementedMethod(type(self).__name__ + ":find_violation_scheduled() is not implemented.")
 
 
 class UnimplementedMethod(Exception): pass
