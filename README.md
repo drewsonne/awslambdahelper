@@ -61,11 +61,9 @@ class MyCustomConfigurationChangeRule(AWSConfigRule):
                     )
                ) 
             else:
-                response.append(
-                    # There's no need to set the resource id or type, as the library is aware of those
-                    # values and will apply them automatically.
-                    CompliantEvaluation()
-                )
+                # There's no need to set the resource id or type, as the library is aware of those
+                # values and will apply them automatically.
+                response.append(CompliantEvaluation())
         
         return response
 
