@@ -1,6 +1,8 @@
 # aws_lambdahelper
 Abstracts the more mundane aspects of lambda resources
 
+A lot of boilerplate code is required to implemented lambda's for AWS Config and custom Cloudformation resources. We can
+abstract this away and wrap it in data structures to improve development and encourage a particular structure.
 
 ## Usage
 
@@ -24,6 +26,15 @@ setup(
 ```
 
 ### AWS Config Rule
+
+AWS Config rules come in two flavours: _Scheduled_ and _ConfigurationChange_.
+
+_Scheduled_ rules are invoked by AWS Config on a periodic basis as defined in your rule, and _ConfigurationChange_
+rules are invoked by AWS Config when a configuration change occurs. Generally, you used scheduled rules for resources
+which AWS Config [support directly](http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html),
+and _ConfigurationChange_ rules for 
+[additional resources types for AWS Config](http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types).
+
 
 Create a new class, write it in a function to be set as the lambda handler, and override either the 
 `find_violation_scheduled(...)` function or `find_violation_config_change(...)`.
