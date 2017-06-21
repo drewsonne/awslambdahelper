@@ -20,7 +20,7 @@ from setuptools import setup
 
 setup(
     name='my_custom_config_rule',
-    install_requires=['aws_lambda_helper'],
+    install_requires=['aws_lambdahelper'],
     ...
 )
 ```
