@@ -40,5 +40,5 @@ def init(project):
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
 
-    project.set_property("coverage_threshold_warn", 55)
+    project.set_property("coverage_threshold_warn", 50)
     project.set_property("coverage_reload_modules", True)
