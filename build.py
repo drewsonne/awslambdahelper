@@ -16,7 +16,7 @@ authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com",),)
 license = "LGLP"
 
 RUNTIME_DEPENDENCIES = ['boto3']
-BUILD_DEPENDENCIES = ['pytest-mocker','moto','pytest-cov','pytest-runner']
+BUILD_DEPENDENCIES = ['pytest','pytest-mocker','moto','pytest-cov','pytest-runner']
 
 @init
 def init(project):
