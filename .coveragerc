@@ -1,0 +1,9 @@
+[run]
+cover_pylib = False
+
+[report]
+exclude_lines =
+    pragma: no cover
+    import
+    class
+    def
