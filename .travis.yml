@@ -9,8 +9,8 @@ python:
 before_install:
   - pip install pybuilder
 
-install:
-  - pyb -v install_dependencies
+#install:
+#  - pyb -v install_dependencies
 
 script:
   - pyb -v analyze
