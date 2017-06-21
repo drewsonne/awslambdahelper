@@ -16,7 +16,7 @@ authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com",),)
 license = "LGLP"
 
 RUNTIME_DEPENDENCIES = ['boto3']
-BUILD_DEPENDENCIES = ['pytest-pythonpath','pytest', 'pytest-mock','moto','pytest-runner']
+BUILD_DEPENDENCIES = ['pytest-pythonpath','pytest', 'pytest-mock','moto','pytest-cov','pytest-runner']
 
 @init
 def init(project):
@@ -35,6 +35,8 @@ def init(project):
     project.set_property("dir_source_pytest_python", "src/unittest/python")
     # extra arguments which will be passed to pytest
     project.get_property("pytest_extra_args").append("-x")
+    project.get_property("pytest_extra_args").append("--cov-report=xml")
+    project.get_property("pytest_extra_args").append("--cov=awslambdahelper")
 
 
     project.set_property("flake8_break_build", True)

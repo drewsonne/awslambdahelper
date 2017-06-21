@@ -16,4 +16,4 @@ script:
   - pyb run_unit_tests
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -s target/reports/coverage
+  - bash <(curl -s https://codecov.io/bash)
