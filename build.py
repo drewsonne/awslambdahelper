@@ -12,15 +12,15 @@ use_plugin('exec')
 name = "awslambdahelper"
 version = "1.0.0"
 default_task = "publish"
-authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com",),)
+authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
 
 RUNTIME_DEPENDENCIES = ['boto3']
-BUILD_DEPENDENCIES = ['pytest','pytest-mock','moto','pytest-cov','pytest-runner']
+BUILD_DEPENDENCIES = ['pytest-runner', 'pytest', 'pytest-mock', 'moto', 'pytest-cov', 'pytest-runner']
+
 
 @init
 def init(project):
-
     for dependency in RUNTIME_DEPENDENCIES:
         project.depends_on(dependency)
 
@@ -36,7 +36,6 @@ def init(project):
     # extra arguments which will be passed to pytest
     project.get_property("pytest_extra_args").append("-x")
     project.get_property("pytest_extra_args").append("--cov-report=xml")
-
 
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
