@@ -1,5 +1,6 @@
 """
-See http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceResourceType
+See http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html \
+#config-Type-Evaluation-ComplianceResourceType
 """
 import datetime
 

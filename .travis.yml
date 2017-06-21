@@ -10,10 +10,10 @@ before_install:
   - pip install pybuilder
 
 install:
- - pyb install_dependencies
+  - pyb -v install_dependencies
 
 script:
-  - pyb run_unit_tests
+  - pyb -v run_unit_tests
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

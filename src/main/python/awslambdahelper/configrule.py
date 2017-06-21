@@ -28,7 +28,9 @@ class AWSConfigRule(object):
 
     def lambda_handler(self, event, context):
         """
-        See Event Attributes in http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html#w2ab1c13c33c27c15c15
+        See Event Attributes in
+        http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html \
+        #w2ab1c13c33c27c15c15
         :param event:
         :param context:
         :return:
@@ -99,4 +101,5 @@ class AWSConfigRule(object):
         raise UnimplementedMethod(type(self).__name__ + ":find_violation_scheduled() is not implemented.")
 
 
-class UnimplementedMethod(Exception): pass
+class UnimplementedMethod(Exception):
+    pass
