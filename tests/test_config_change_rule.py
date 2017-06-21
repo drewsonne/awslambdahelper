@@ -1,8 +1,8 @@
 import json
 import pytest
 
-from awsconfig_lambdahelper.configrule import AWSConfigRule
-from awsconfig_lambdahelper.evaluation import CompliantEvaluation
+from aws_lambdahelper.configrule import AWSConfigRule
+from aws_lambdahelper.evaluation import CompliantEvaluation
 
 
 @pytest.mark.parametrize('lambda_event,put_evaluations_response', [

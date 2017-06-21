@@ -12,5 +12,10 @@ setup(
     author_email='drew.sonne@gmail.com',
     license='GLPG',
     packages=find_packages(),
-    zip_safe=True
+    zip_safe=True,
+    entry_points={
+        "console_scripts": [
+            "lambdahelper-bundle=aws_lambdahelper.cli:main",
+        ],
+    },
 )

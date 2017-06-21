@@ -2,7 +2,7 @@ import json
 
 import boto3
 
-from awsconfig_lambdahelper.evaluation import NotApplicableEvaluation
+from aws_lambdahelper.evaluation import NotApplicableEvaluation
 
 
 class AWSConfigRule(object):
