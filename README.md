@@ -56,15 +56,15 @@ class MyCustomConfigurationChangeRule(AWSConfigRule):
         for violation in rule_responses:
             if violation['failed']:
                response.append(
-                    # There's no need to set the resource id or type, as the library is aware of those
-                    # values and will apply them automatically.
-                    CompliantEvaluation()
-               ) 
-            else:
-                response.append(
                     NonCompliantEvaluation(
                         Annotation="This failed because of a good reason."
                     )
+               ) 
+            else:
+                response.append(
+                    # There's no need to set the resource id or type, as the library is aware of those
+                    # values and will apply them automatically.
+                    CompliantEvaluation()
                 )
         
         return response
