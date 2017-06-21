@@ -1,0 +1,19 @@
+
+sudo: false
+
+language: python
+
+python:
+  - "2.7"
+
+before_install:
+  - pip install --user codecov pytest-cov
+
+install:
+  - pip install --user .
+
+script:
+  - coverage run tests.py
+
+after_success:
+  - codecov
