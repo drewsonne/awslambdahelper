@@ -7,10 +7,10 @@ python:
   - "2.7"
 
 before_install:
-  - pip install --user codecov pytest-cov
+  - pip install codecov pytest-cov
 
 install:
-  - pip install --user .
+  - pip install .
 
 script:
   - coverage run tests.py
