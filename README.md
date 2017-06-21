@@ -10,7 +10,7 @@ abstract this away and wrap it in data structures to improve development and enc
 
 __Pip__
 ```shell
-$ pip install aws_lambdahelper
+$ pip install awslambdahelper
 ```
 
 __Bundled__
@@ -20,7 +20,7 @@ from setuptools import setup
 
 setup(
     name='my_custom_config_rule',
-    install_requires=['aws_lambdahelper'],
+    install_requires=['awslambdahelper'],
     ...
 )
 ```
