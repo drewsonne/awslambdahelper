@@ -1,5 +1,5 @@
 # aws_lambdahelper
-Abstracts the more mundane aspects of lambda resources
+Abstracts the more mundane aspects of lambda resources.
 
 A lot of boilerplate code is required to implemented lambda's for AWS Config and custom Cloudformation resources. We can
 abstract this away and wrap it in data structures to improve development and encourage a particular structure.
