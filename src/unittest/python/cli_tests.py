@@ -1,6 +1,6 @@
 import os
 import unittest
-from argparse import Namespace
+from argparse import Namespace, ArgumentError
 
 from mock import patch, call
 
@@ -33,18 +33,20 @@ class TestArgParserTests(unittest.TestCase):
         os.path.expanduser = self.original['os.path.expanduser']
         os.path.abspath = self.original['os.path.abspath']
 
-    # @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_directory')
-    # @patch('awslambdahelper.cli.BundlerArgumentParser._test_not_a_directory')
-    # @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_requirements')
-    # def test_parser(self, missing_requirements, not_a_directory, missing_directory):
-    #     missing_requirements.return_value = 'missing_requirements'
-    #     not_a_directory.return_value = None
-    #     missing_directory.return_value = None
-    #
-    #     parser = BundlerArgumentParser()
-    #     parser._parse_known_args([
-    #         '--directory', 'world',
-    #     ], Namespace(requirements_name='requirements.txt'))
+    @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_directory')
+    @patch('awslambdahelper.cli.BundlerArgumentParser._test_not_a_directory')
+    @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_requirements')
+    def test_parser(self, missing_requirements, not_a_directory, missing_directory):
+        missing_requirements.return_value = 'missing_requirements'
+        not_a_directory.return_value = None
+        missing_directory.return_value = None
+
+        parser = BundlerArgumentParser()
+
+        with self.assertRaises(ArgumentError):
+            parser._parse_known_args([
+                '--directory', 'world',
+            ], Namespace(requirements_name='requirements.txt'))
 
     def test_missingdir_true(self):
         cli_parser = BundlerArgumentParser()
