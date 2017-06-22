@@ -1,35 +1,73 @@
 import ConfigParser
+import argparse
 import glob
 import os
 import shutil
 import sys
 import tempfile
-from argparse import ArgumentParser
 import pip
 import zipfile
 
 
+class BundlerArgumentParser(argparse.ArgumentParser):
+    def __init__(self):
+        super(BundlerArgumentParser, self).__init__()
+        self.add_argument('--directory', help='Path to the directory to bundle for AWS lambda.')
+        self.add_argument('--requirements_name', default='requirements.txt',
+                          help='Name of the requirements file in the target directory')
+
+    def _parse_known_args(self, arg_strings, namespace):
+        """
+        Parse as the parent does, and then optionally raise an ArgumentException is --send-to-cfn is missing --owner.
+        :param arg_strings:
+        :param namespace:
+        :return:
+        """
+        namespace, unparsed_args = super(BundlerArgumentParser, self)._parse_known_args(arg_strings, namespace)
+        namespace.requirements_path = os.path.join(namespace.target_directory, namespace.requirements_file)
+        namespace.directory = self._full_path(namespace.directory)
+
+        directory_missing = self._test_missing_directory(namespace.directory)
+        not_a_directory = self._test_not_a_directory(namespace.directory)
+        missing_requirements = self._test_missing_requirements(namespace.requirements_path)
+
+        if directory_missing or not_a_directory:
+            directory_action = filter(lambda action: '--directory' in action.option_strings, self._actions).pop()
+            raise argparse.ArgumentError(directory_action, directory_missing or not_a_directory)
+
+        if missing_requirements:
+            requirement_action = filter(lambda action: '--requirements_name' in action.option_strings,
+                                        self._actions).pop()
+            raise argparse.ArgumentError(requirement_action, missing_requirements)
+
+        return namespace, unparsed_args
+
+    def _test_missing_directory(self, target_directory):
+        if not os.path.exists(target_directory):
+            return "Could not find `--directory={dir}`.".format(dir=target_directory)
+        return False
+
+    def _test_not_a_directory(self, target_directory):
+        if not os.path.isdir(target_directory):
+            return "`--directory={dir}` is not a directory.".format(dir=target_directory)
+        return False
+
+    def _test_missing_requirements(self, requirements_path):
+        if not os.path.exists(requirements_path):
+            return "Could not find requirements file at `{path}`.".format(path=requirements_path)
+        return False
+
+    def _full_path(self, dir_):
+        if dir_[0] == '~' and not os.path.exists(dir_):
+            dir_ = os.path.expanduser(dir_)
+        return os.path.abspath(dir_)
+
+
 def main(args=sys.argv[1:]):
-    cli_parser = ArgumentParser()
-    cli_parser.add_argument('--directory', help='Path to the directory to bundle for AWS lambda.')
-    cli_parser.add_argument('--requirements_name', default='requirements.txt',
-                            help='Name of the requirements file in the target directory')
-    cli_args = cli_parser.parse_args(args)
+    cli_args = BundlerArgumentParser().parse_args(args)
 
-    target_directory = full_path(cli_args.directory)
-    requirements_file = cli_args.requirements_name
-
-    requirements_path = os.path.join(target_directory, requirements_file)
-
-    if not os.path.exists(target_directory):
-        print "Could not find `--directory={dir}`.".format(dir=target_directory)
-        exit(1)
-    elif not os.path.isdir(target_directory):
-        print "`--directory={dir}` is not a directory.".format(dir=target_directory)
-        exit(2)
-    elif not os.path.exists(requirements_path):
-        print "Could not find requirements file at `{path}`.".format(path=requirements_path)
-        exit(3)
+    target_directory = cli_args.directory
+    requirements_path = cli_args.requirements_path
 
     # Create temporary working directory
     working_directory = tempfile.mkdtemp()
@@ -49,12 +87,6 @@ def main(args=sys.argv[1:]):
     ])
 
     create_zip(target_directory, working_directory)
-
-
-def full_path(dir_):
-    if dir_[0] == '~' and not os.path.exists(dir_):
-        dir_ = os.path.expanduser(dir_)
-    return os.path.abspath(dir_)
 
 
 def create_zip(target_directory, working_directory):
