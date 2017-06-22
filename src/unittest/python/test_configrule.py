@@ -1,15 +1,17 @@
 import pytest
 
-from awslambdahelper.configrule import AWSConfigRule, UnimplementedMethod
-
 
 def test_classinstantiation(mocker):
+    from awslambdahelper.configrule import AWSConfigRule
+
     AWSConfigRule(
         applicable_resources=["AWS::EC2::INSTANCE"]
     )
 
 
 def test_configcalltype():
+    from awslambdahelper.configrule import AWSConfigRule
+
     rule = AWSConfigRule(
         applicable_resources=["AWS::EC2::INSTANCE"]
     )
@@ -19,6 +21,8 @@ def test_configcalltype():
 
 
 def test_schedulecalltype():
+    from awslambdahelper.configrule import AWSConfigRule
+
     rule = AWSConfigRule(
         applicable_resources=["AWS::EC2::INSTANCE"]
     )
@@ -28,6 +32,8 @@ def test_schedulecalltype():
 
 
 def test_unimplemented_callbacks():
+    from awslambdahelper.configrule import AWSConfigRule, UnimplementedMethod
+
     rule = AWSConfigRule(
         applicable_resources=["AWS::EC2::INSTANCE"]
     )

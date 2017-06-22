@@ -35,10 +35,12 @@ def init(project):
     project.set_property("dir_source_pytest_python", "src/unittest/python")
     # extra arguments which will be passed to pytest
     project.get_property("pytest_extra_args").append("-x")
-    project.get_property("pytest_extra_args").append("--cov-report=xml")
+    # project.get_property("pytest_extra_args").append("--cov-report=xml")
 
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
 
     project.set_property("coverage_threshold_warn", 50)
     project.set_property("coverage_reload_modules", True)
+    project.set_property("coverage_fork", True)
+#

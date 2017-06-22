@@ -2,10 +2,6 @@ import json
 
 import pytest
 
-from awslambdahelper.configrule import AWSConfigRule
-from awslambdahelper.evaluation import CompliantEvaluation
-
-
 @pytest.mark.parametrize('lambda_event,put_evaluations_response', [
     (
             # AWS Lambda event payload. Request from AWS Config
@@ -102,6 +98,9 @@ from awslambdahelper.evaluation import CompliantEvaluation
     )
 ])
 def test_configchangeevent(mocker, lambda_event, put_evaluations_response):
+    from awslambdahelper.configrule import AWSConfigRule
+    from awslambdahelper.evaluation import CompliantEvaluation
+
     class MockConfigRule(AWSConfigRule):
         def find_violation_config_change(self, config, rule_parameters):
             return [CompliantEvaluation()]
