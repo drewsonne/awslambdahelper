@@ -2,11 +2,9 @@ sudo: false
 language: python
 python:
 - '2.7'
-before_install:
 
 install:
 - pip install pybuilder
-- pyb -v install_dependencies
 
 script:
 - pyb -v -X install_dependencies analyze install
