@@ -9,7 +9,7 @@ use_plugin('python.coverage')
 use_plugin('exec')
 
 name = "awslambdahelper"
-version = "1.1.0"
+version = "1.1.1"
 default_task = "publish"
 authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
