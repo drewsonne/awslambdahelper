@@ -1,19 +1,18 @@
-
 sudo: false
-
 language: python
-
 python:
-  - "2.7"
-
+- '2.7'
 before_install:
-  - pip install pybuilder
-
-#install:
-#  - pyb -v install_dependencies
-
+- pip install pybuilder
 script:
-  - pyb -v analyze
-
+- pyb -v analyze
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+- bash <(curl -s https://codecov.io/bash)
+deploy:
+  provider: pypi
+  user:
+    secure: QwyVogZcKxeMIh1dVGzzo/lqVV9DnImFdnAVnjUxMAmI1h+8QUAVFyyp8ldtpelLOD5wO/WV1Bivu3uQ4BmTKCKIcPBexg36/jDYFJyWubK797yLMVUnwyCa1nbwMSw+ioN7goILs6piJp9cEKnxhiTCd8mQxawVjlZwAIR+EoEZOh7ZDvHmAGbGBTepEnob7a4/u1/9wl7VOdL3s2rL4CGQZKLsxLR0p2dOVf3AaW2HFSA6C2lzni/r32oKjVnNKVsMIFmTBhU6kldA0nq+G1iAhRTiXVLZHOH6kip9351ZXYSk/20Tg87CG163SEcI2Kx0jUovMT/mnRo615IIFNYRAWuU0Nsg5TTDrNbMwut7cnoQeNqE+wx1REaLNBqKUvp8WweTwz4v/HeYOO8FFmttbqU34bnlcv11ruNv1OOjCEZb3TGoEMP/qdTrRL/6Nt+/H5GsK8kyrYvGeR/KmyM1GhM5nBLvs5QxGV3pB1NBnpCPY2sr+QHE6vcyPvE1jTThbX8hm1sEQozXJ82OKdHjtmDev450fHvThiEri3NZu4AEQdmoHM35j0auOye5IDnJi/zx+UAIxmh6RJGViIy302Z4EsTbLoS7+NgW1FZcl6c80MlIVciEDy+h0Mv9PEHZOE2g20mFy0As163kL4wqnOh0ep6aF6WYrIljwpo=
+  password:
+    secure: lFV2X7T3uIg2Lu7k7sr5cl7oCFQ7dzeyjXfb38yTdzZ7edPwwHmY+oboiUyKxDdV+mC6/Rtgyb24vVIvgT4jsrkSguX2lMqGDgeVdnZleKp/L4dtaj/N1Z5bNXTisaHbTgGykCKHvVKGxCvM02QshI9p3PWEKMb8BrTav69pWPC/vYgLXi3BioqrKhUJ6Al2g9nQyWsB2wZeTk14axjW5Y7IKoW/eL6p4qo46mhWMwk+qq0btrqGpfgr0I48jQ3UNczsdWonB66MJ+U7mpc4eBy1PnvJf2cW5AEudqBDitIob/+OFdJSwLNO7fxh7VUiGCYeNxhxiQVk4wWMXxc+WJr4fpN3cdXqWnd1gBulno6Mq076M8uQWht3m97KCAL9u92JXuJthND5Wdabm6pVGTkoqav5FB0EZjNmzNhUbv3BvsCsSe7dSs1q53J3qWOm0QhG1I7jSQIgE8QaEUEhiwTDs3ae5mAfxi6HWu1rzDO/aW+GCiYQ8GodLzFXnsKIr+TYWKez+njZHJT6jBZt42PF1MzKmKUyURu8KvVBVUpEPGQwu+5TNYFB4mCVn6O5+2pYQGepNAH+MuEzZYuXrUmCojTdxHRaaLKc+NZjJ6fA39TYQCsVkeIVLM9d/TZTRAPhxjxse2R5X4gi9teofJysu5REUZGMhla0sZC/sjQ=
+  on:
+    tags: true
