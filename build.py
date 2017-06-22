@@ -3,7 +3,6 @@ from pybuilder.core import use_plugin, init, Author
 use_plugin("python.core")
 use_plugin("python.install_dependencies")
 use_plugin("python.flake8")
-use_plugin("python.coverage")
 use_plugin("python.distutils")
 use_plugin('python.unittest')
 use_plugin('python.coverage')
@@ -31,9 +30,6 @@ def init(project):
     project.set_property("flake8_break_build", True)
 
     project.set_property("coverage_threshold_warn", 50)
-    project.set_property("coverage_reload_modules", False)
-    project.set_property("coverage_fork", False)
 
     project.set_property('distutils_upload_repository', 'https://pypi.python.org/pypi')
 
-#
