@@ -86,15 +86,18 @@ class AWSConfigRule(object):
                 )]
 
             violations = self.find_violation_config_change(
-                config,
-                rule_parameters
+                rule_parameters=rule_parameters,
+                config=config
             )
         else:
-            violations = self.find_violation_scheduled(rule_parameters=rule_parameters, accountid=event['accountId'])
+            violations = self.find_violation_scheduled(
+                rule_parameters=rule_parameters,
+                accountid=event['accountId']
+            )
 
         return violations
 
-    def find_violation_config_change(self, config, rule_parameters):
+    def find_violation_config_change(self, rule_parameters, config):
         raise UnimplementedMethod(type(self).__name__ + ":find_violation_config_change() is not implemented.")
 
     def find_violation_scheduled(self, rule_parameters, accountid):

@@ -10,7 +10,7 @@ use_plugin('python.pycharm')
 use_plugin('exec')
 
 name = "awslambdahelper"
-version = "1.0.0"
+version = "1.0.2"
 default_task = "publish"
 authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
@@ -43,4 +43,6 @@ def init(project):
     project.set_property("coverage_threshold_warn", 50)
     project.set_property("coverage_reload_modules", True)
     project.set_property("coverage_fork", True)
+
+    project.set_property('distutils_upload_repository', 'https://pypi.python.org/pypi')
 #
