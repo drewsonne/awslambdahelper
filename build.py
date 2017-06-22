@@ -16,7 +16,7 @@ authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
 
 RUNTIME_DEPENDENCIES = ['boto3']
-BUILD_DEPENDENCIES = ['sphinx_rtd_theme','mock','coverage<4.0.0']
+BUILD_DEPENDENCIES = ['sphinx_rtd_theme','mock','coverage']
 
 
 @init

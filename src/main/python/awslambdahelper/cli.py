@@ -42,22 +42,26 @@ class BundlerArgumentParser(argparse.ArgumentParser):
 
         return namespace, unparsed_args
 
-    def _test_missing_directory(self, target_directory):
+    @staticmethod
+    def _test_missing_directory(target_directory):
         if not os.path.exists(target_directory):
             return "Could not find `--directory={dir}`.".format(dir=target_directory)
         return False
 
-    def _test_not_a_directory(self, target_directory):
+    @staticmethod
+    def _test_not_a_directory(target_directory):
         if not os.path.isdir(target_directory):
             return "`--directory={dir}` is not a directory.".format(dir=target_directory)
         return False
 
-    def _test_missing_requirements(self, requirements_path):
+    @staticmethod
+    def _test_missing_requirements(requirements_path):
         if not os.path.exists(requirements_path):
             return "Could not find requirements file at `{path}`.".format(path=requirements_path)
         return False
 
-    def _full_path(self, dir_):
+    @staticmethod
+    def _full_path(dir_):
         if dir_[0] == '~' and not os.path.exists(dir_):
             dir_ = os.path.expanduser(dir_)
         return os.path.abspath(dir_)

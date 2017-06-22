@@ -21,7 +21,8 @@ class AWSConfigRule(object):
     def is_scheduled_call(self):
         return self.call_type == self.CALL_TYPE_SCHEDULED
 
-    def put_evaluations(self, *args, **kwargs):
+    @staticmethod
+    def put_evaluations(*args, **kwargs):
         return boto3.client("config").put_evaluations(
             *args, **kwargs
         )
@@ -48,18 +49,18 @@ class AWSConfigRule(object):
 
         if self.is_config_change_call:
 
-            configurationItem = invoking_event["configurationItem"]
+            configuration_item = invoking_event["configurationItem"]
             evaluation_responses = self.evaluate_compliance(
-                config=configurationItem,
+                config=configuration_item,
                 rule_parameters=rule_parameters,
                 event=event
             )
 
             for evaluation_response in evaluation_responses:
                 evaluation = evaluation_response.append(
-                    ResourceType=configurationItem["resourceType"],
-                    ResourceId=configurationItem["resourceId"],
-                    OrderingTimestamp=configurationItem["configurationItemCaptureTime"]
+                    ResourceType=configuration_item["resourceType"],
+                    ResourceId=configuration_item["resourceId"],
+                    OrderingTimestamp=configuration_item["configurationItemCaptureTime"]
                 ).to_dict()
                 evaluations.append(evaluation)
         else:
