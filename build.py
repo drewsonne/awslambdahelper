@@ -16,7 +16,7 @@ authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
 
 RUNTIME_DEPENDENCIES = ['boto3']
-BUILD_DEPENDENCIES = ['mock', 'pytest-runner', 'pytest>=3.0.0', 'pytest-mock', 'moto', 'pytest-cov', 'pytest-runner']
+BUILD_DEPENDENCIES = ['mock']
 
 
 @init
