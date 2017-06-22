@@ -9,7 +9,7 @@ install:
 - pyb -v install_dependencies
 
 script:
-- pyb -v verify analyze
+- "./build.py -v -X install_dependencies analyze install"
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
