@@ -7,7 +7,7 @@ install:
 - pip install pybuilder
 
 script:
-- pyb -v -X install_dependencies analyze install
+- pyb -v install_dependencies analyze install
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
