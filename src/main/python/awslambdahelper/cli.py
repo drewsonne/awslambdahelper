@@ -24,8 +24,8 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         :return:
         """
         namespace, unparsed_args = super(BundlerArgumentParser, self)._parse_known_args(arg_strings, namespace)
-        namespace.requirements_path = os.path.join(namespace.target_directory, namespace.requirements_file)
         namespace.directory = self._full_path(namespace.directory)
+        namespace.requirements_path = os.path.join(namespace.directory, namespace.requirements_name)
 
         directory_missing = self._test_missing_directory(namespace.directory)
         not_a_directory = self._test_not_a_directory(namespace.directory)

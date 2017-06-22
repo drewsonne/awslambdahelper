@@ -5,11 +5,12 @@ python:
 before_install:
 - pip install pybuilder
 install:
-- pyb -v install_dependencies publish
+- pyb -v install_dependencies
 script:
 - pyb -v run_unit_tests
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+- pyb -v package
 deploy:
   provider: pypi
   user:
