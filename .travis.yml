@@ -4,8 +4,9 @@ python:
 - '2.7'
 before_install:
 - pip install pybuilder
-script:
+install:
 - pyb -v publish
+- pyb -v install
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
