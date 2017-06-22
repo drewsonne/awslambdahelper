@@ -1,3 +1,4 @@
+import os
 import unittest
 from argparse import Namespace
 
@@ -8,6 +9,12 @@ from awslambdahelper.cli import BundlerArgumentParser
 
 class TestArgParserTests(unittest.TestCase):
     def setUp(self):
+        self.original = {}
+        self.original['os.path.exists'] = os.path.exists
+        self.original['os.path.isdir'] = os.path.exists
+        self.original['os.path.expanduser'] = os.path.expanduser
+        self.original['os.path.abspath'] = os.path.abspath
+
         self.path_exists = patch('os.path.exists').start()
         self.addCleanup(self.path_exists.stop)
 
@@ -19,6 +26,12 @@ class TestArgParserTests(unittest.TestCase):
 
         self.path_abspath = patch('os.path.abspath').start()
         self.addCleanup(self.path_abspath.stop)
+
+    def tearDown(self):
+        os.path.exists = self.original['os.path.exists']
+        os.path.isdir = self.original['os.path.isdir']
+        os.path.expanduser = self.original['os.path.expanduser']
+        os.path.abspath = self.original['os.path.abspath']
 
     # @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_directory')
     # @patch('awslambdahelper.cli.BundlerArgumentParser._test_not_a_directory')
