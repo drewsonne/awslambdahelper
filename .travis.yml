@@ -11,6 +11,7 @@ script:
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 - pyb -v package
+- pyb -v publish
 deploy:
   provider: pypi
   user:
