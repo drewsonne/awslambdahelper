@@ -5,8 +5,7 @@ python:
 before_install:
 - pip install pybuilder
 install:
-- pyb -v publish
-- pyb -v install
+- pyb -v install_depdencies publish
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
