@@ -3,15 +3,20 @@ language: python
 python:
 - '2.7'
 before_install:
-- pip install pybuilder
+
 install:
+- pip install pybuilder
 - pyb -v install_dependencies
+
 script:
-- pyb -v run_unit_tests
+- pyb -v verify analyze
+
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+before_deploy:
 - pyb -v package
-- pyb -v publish
+
 deploy:
   provider: pypi
   user:
