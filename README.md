@@ -1,4 +1,4 @@
-# aws_lambdahelper
+# awslambdahelper
 Abstracts the more mundane aspects of lambda resources.
 
 A lot of boilerplate code is required to implemented lambda's for AWS Config and custom Cloudformation resources. We can
