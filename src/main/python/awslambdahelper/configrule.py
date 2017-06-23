@@ -37,7 +37,10 @@ class AWSConfigRule(object):
         :return:
         """
         invoking_event = json.loads(event["invokingEvent"])
-        rule_parameters = json.loads(event["ruleParameters"])
+        if 'ruleParameters' in event:
+            rule_parameters = json.loads(event["ruleParameters"])
+        else:
+            rule_parameters = {}
 
         self.call_type = invoking_event['messageType']
 
