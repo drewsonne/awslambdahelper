@@ -11,7 +11,7 @@ use_plugin("source_distribution")
 use_plugin("python.install_dependencies")
 
 name = "awslambdahelper"
-version = "1.1.3"
+version = "1.1.4"
 default_task = "publish"
 authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
