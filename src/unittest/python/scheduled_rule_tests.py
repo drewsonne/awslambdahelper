@@ -40,6 +40,35 @@ class TestScheduledRuleTsts(unittest.TestCase):
                     }],
                     "ResultToken": "myResultToken"
                 }
+            ),
+            (
+                {
+                    "invokingEvent": json.dumps({
+                        "awsAccountId": "123456789012",
+                        "notificationCreationTime": "2016-07-13T21:50:00.373Z",
+                        "messageType": "ScheduledNotification",
+                        "recordVersion": "1.0"
+                    }),
+                    "resultToken": "myResultToken",
+                    "eventLeftScope": False,
+                    "executionRoleArn": "arn:aws:iam::123456789012:role/config-role",
+                    "configRuleArn": "arn:aws:config:us-east-1:123456789012:config-rule/config-rule-0123456",
+                    "configRuleName": "periodic-config-rule",
+                    "configRuleId": "config-rule-6543210",
+                    "accountId": "123456789012",
+                    "version": "1.0"
+                },
+                # Response
+                {
+                    "Evaluations": [{
+                        "OrderingTimestamp": "2016-07-13T21:50:00.373Z",
+                        "ComplianceResourceId": "i-00000000",
+                        "ComplianceResourceType": "AWS::EC2::Instance",
+                        "Annotation": "This resource is compliant with the rule.",
+                        "ComplianceType": "COMPLIANT"
+                    }],
+                    "ResultToken": "myResultToken"
+                }
             )
         ]
 
