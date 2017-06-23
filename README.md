@@ -126,3 +126,15 @@ def lambda_handler(event, context):
     my_rule.lambda_handler(event, context)
 
 ```
+
+## Reference
+
+### awslambdahelper.configrule.AWSConfig.find\_violation\_config\_change()
+
+#### Parameters
+
+| Name | Description | Example |
+|------|-------------|---------|
+|`config`|
+
+### awslambdahelper.configrule.AWSConfig.find\_violation\_scheduled()
