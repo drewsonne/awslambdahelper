@@ -74,10 +74,12 @@ class AWSConfigRule(object):
                     OrderingTimestamp=invoking_event["notificationCreationTime"]
                 ).to_dict())
 
-        self.put_evaluations(
-            Evaluations=evaluations,
-            ResultToken=result_token
-        )
+        chunk_size = 100
+        for evaluation_chunk in range(0, len(evaluations), chunk_size):
+            self.put_evaluations(
+                Evaluations=evaluations[evaluation_chunk:evaluation_chunk + chunk_size],
+                ResultToken=result_token
+            )
 
     def evaluate_compliance(self, rule_parameters, event, config=None):
         if self.is_config_change_call:
