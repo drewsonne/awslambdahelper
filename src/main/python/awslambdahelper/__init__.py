@@ -22,8 +22,9 @@ class AWSConfigRule(object):
         ...     APPLICABLE_RESOURCES = ["AWS::EC2::Instance"]
         ...     def find_violation_config_change(self, rule_parameters, config):
         ...         return [InsufficientDataEvaluation()]
-
-        >>> lambda_handler = MyAwesomeRule.handler # The entrypoint for lambda would be set as "file_name.lambda_handler"
+        >>>
+        >>> # The entrypoint for lambda would be set as "file_name.lambda_handler"
+        >>> lambda_handler = MyAwesomeRule.handler
 
 
         :param event:
