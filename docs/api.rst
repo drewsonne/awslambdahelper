@@ -9,8 +9,6 @@ Rules
 .. autoclass:: awslambdahelper.AWSConfigRule
   :members:
 
-  .. autoattribute:: CALL_TYPE_CONFIGURATION_CHANGE
-
 -----------
 Evaluations
 -----------

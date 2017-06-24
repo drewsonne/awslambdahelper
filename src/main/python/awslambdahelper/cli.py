@@ -10,7 +10,13 @@ import zipfile
 
 
 class BundlerArgumentParser(argparse.ArgumentParser):
+    """
+    Parses command line arguments, and validates the integrity of the file paths and directories provided.
+    """
     def __init__(self):
+        """
+
+        """
         super(BundlerArgumentParser, self).__init__()
         self.add_argument('--directory', help='Path to the directory to bundle for AWS lambda.')
         self.add_argument('--requirements_name', default='requirements.txt',
@@ -19,6 +25,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
     def _parse_known_args(self, arg_strings, namespace):
         """
         Parse as the parent does, and then optionally raise an ArgumentException is --send-to-cfn is missing --owner.
+
         :param arg_strings:
         :param namespace:
         :return:
@@ -44,36 +51,68 @@ class BundlerArgumentParser(argparse.ArgumentParser):
 
     @staticmethod
     def _test_missing_directory(target_directory):
+        """
+        If the specified directory is missing, return an error message
+
+        :param target_directory:
+        :return: An error message, or False if the requirements file exists.
+        :rtype: Union[str,bool]
+        """
         if not os.path.exists(target_directory):
             return "Could not find `--directory={dir}`.".format(dir=target_directory)
         return False
 
     @staticmethod
     def _test_not_a_directory(target_directory):
+        """
+        If the specified path is not a directory, return an error message
+
+        :param target_directory:
+        :return: An error message, or False if the requirements file exists.
+        :rtype: Union[str,bool]
+        """
         if not os.path.isdir(target_directory):
             return "`--directory={dir}` is not a directory.".format(dir=target_directory)
         return False
 
     @staticmethod
     def _test_missing_requirements(requirements_path):
+        """
+        If the requirements path does not exist, return an error method
+
+        :param requirements_path:
+        :return: An error message, or False if the requirements file exists.
+        :rtype: Union[str,bool]
+        """
         if not os.path.exists(requirements_path):
             return "Could not find requirements file at `{path}`.".format(path=requirements_path)
         return False
 
     @staticmethod
     def _full_path(dir_):
+        """
+        Expand any '~', '../', or './' in the dir\_ path.
+
+        :param dir_: A relative, home relative, or absolute path.
+        :return: Fully Qualified path
+        :rtype: str
+        """
         if dir_[0] == '~' and not os.path.exists(dir_):
             dir_ = os.path.expanduser(dir_)
         return os.path.abspath(dir_)
 
 
-def main(args=sys.argv[1:]):
+def main(args=None):
     """
     Entrypoint for our bundler cli tool
 
-    :param args:
+    :param args: defaults to :py:data:`sys.argv[1:]`
     :return:
     """
+
+    if args is None:
+        args = sys.argv[1:]
+
     cli_args = BundlerArgumentParser().parse_args(args)
 
     target_directory = cli_args.directory
@@ -121,9 +160,11 @@ def zipdir(path, ziph, zip_path_prefix):
     """
     Recursively walk our directory path, and add files to the zip archive.
 
-    :param path:
-    :param ziph:
+    :param path: Path to walk which contains our files to be added to the zip archive.
+    :param ziph: zipfile handler
+    :type ziph: zipfile.ZipFile
     :param zip_path_prefix:
+    :type basestring
     :return:
     """
     # ziph is zipfile handle

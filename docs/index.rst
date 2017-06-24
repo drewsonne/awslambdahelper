@@ -20,4 +20,5 @@ Abstracts the more mundane aspects of lambda resources
   installation
   tutorial
   api
+  internal
   changes
