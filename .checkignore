@@ -1,3 +1,4 @@
 build.py
-# Ignore folder content
+setup.py
 src/unittest/*
+docs/*

@@ -1,5 +1,5 @@
 import unittest
-from awslambdahelper import AWSConfigRule, UnimplementedMethod
+from awslambdahelper import AWSConfigRule
 
 class ConfigRuleTests(unittest.TestCase):
 
@@ -36,8 +36,8 @@ class ConfigRuleTests(unittest.TestCase):
             applicable_resources=["AWS::EC2::INSTANCE"]
         )
 
-        with self.assertRaises(UnimplementedMethod):
+        with self.assertRaises(NotImplementedError):
             rule.find_violation_config_change(config=None, rule_parameters=None)
 
-        with self.assertRaises(UnimplementedMethod):
+        with self.assertRaises(NotImplementedError):
             rule.find_violation_scheduled(rule_parameters=None, accountid=None)
