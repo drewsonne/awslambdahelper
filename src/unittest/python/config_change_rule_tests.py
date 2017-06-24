@@ -2,8 +2,8 @@ import json, unittest
 
 from mock import MagicMock
 
-from awslambdahelper.configrule import AWSConfigRule
-from awslambdahelper.evaluation import CompliantEvaluation
+from awslambdahelper import AWSConfigRule
+from awslambdahelper import CompliantEvaluation
 
 
 class TestConfigChangeRuleTests(unittest.TestCase):
@@ -103,15 +103,14 @@ class TestConfigChangeRuleTests(unittest.TestCase):
             )
         ]
 
-    # @pytest.mark.parametrize('lambda_event,put_evaluations_response', )
     def test_configchangeevent(self):
         class MockConfigRule(AWSConfigRule):
+            APPLICABLE_RESOURCES = ["AWS::EC2::Instance"]
+
             def find_violation_config_change(self, config, rule_parameters):
                 return [CompliantEvaluation()]
 
-        mock_rule = MockConfigRule(
-            applicable_resources=["AWS::EC2::Instance"]
-        )
+        mock_rule = MockConfigRule()
 
         for lambda_event, put_evaluations_response in self.parameters:
             mock_rule.put_evaluations = MagicMock()

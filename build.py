@@ -1,9 +1,12 @@
 from pybuilder.core import use_plugin, init, Author
 
+_version = ('1','1','5')
+
 use_plugin('exec')
 use_plugin("python.core")
 use_plugin("python.flake8")
 use_plugin('python.sphinx')
+use_plugin('python.pytddmon')
 use_plugin('python.unittest')
 use_plugin('python.coverage')
 use_plugin("python.distutils")
@@ -11,7 +14,7 @@ use_plugin("source_distribution")
 use_plugin("python.install_dependencies")
 
 name = "awslambdahelper"
-version = "1.1.4"
+version = ".".join(_version)
 default_task = "publish"
 authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"

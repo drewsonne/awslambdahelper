@@ -1,3 +1,5 @@
+# coding=utf-8
+
 """
 See http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html \
 #config-Type-Evaluation-ComplianceResourceType
@@ -6,18 +8,49 @@ import datetime
 
 
 class AWSConfigEvaluation(object):
-    COMPLIANCE_TYPES = ['COMPLIANT', 'NON_COMPLIANT', 'NOT_APPLICABLE', 'INSUFFICIENT_DATA']
+    #: Define an evaluation of a resource as compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    TYPE_COMPLIANT = 'COMPLIANT'
+    #: Define an evaluation of a resource as not being compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    TYPE_NON_COMPLIANT = 'NON_COMPLIANT'
+    #: Define a rule as not being applicable to a specific resource. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    TYPE_NOT_APPLICABLE = 'NOT_APPLICABLE'
+    #: Define a rule as not having enough insufficient data for evaluate a resource. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    TYPE_INSUFFICIENT_DATA = 'INSUFFICIENT_DATA'
 
     def __init__(self, Type, Annotation, ResourceType=None, ResourceId=None,
                  OrderingTimestamp=None):
+        """
+
+        :param Type: One of :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_COMPLIANT`,
+            :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_NON_COMPLIANT`,
+            :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_NOT_APPLICABLE`, or
+            :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_INSUFFICIENT_DATA`.
+        :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.
+        :type Annotation: str
+        :param ResourceType:
+        :type ResourceType: str
+        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource
+        :type ResourceId: str
+        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.
+        """
         self.OrderingTimestamp = OrderingTimestamp
         self.ComplianceResourceType = ResourceType
         self.ComplianceResourceId = ResourceId
         self.ComplianceType = Type
         self.Annotation = Annotation
 
-    def append(self, ResourceType=None, ResourceId=None,
-               OrderingTimestamp=None):
+    def set(self, ResourceType=None, ResourceId=None,
+            OrderingTimestamp=None):
+        """
+        Sets variables for the evaluation, after creation.
+        See the `Evaluation <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html>`_ resource for details.
+
+        :param ResourceType:
+        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource
+        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.
+        :return: This evaluation object
+        :rtype: :py:class:`~awslambdahelper.evaluation.AWSConfigEvaluation`
+        """
 
         if ResourceType is not None:
             self.ComplianceResourceType = ResourceType
@@ -31,6 +64,14 @@ class AWSConfigEvaluation(object):
         return self
 
     def to_dict(self):
+        """
+        Convert the AWSConfigEvaluation object to
+        an `Evaluation <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html>`_ payload. If the
+        timestamp is not set, we create one.
+
+        :return: an AWS Config Evaluation resource
+        :rtype: dict
+        """
 
         response = {
             'ComplianceType': self.ComplianceType,
@@ -45,50 +86,3 @@ class AWSConfigEvaluation(object):
             response['OrderingTimestamp'] = self.OrderingTimestamp
 
         return response
-
-
-class CompliantEvaluation(AWSConfigEvaluation):
-    def __init__(self, Annotation="This resource is compliant with the rule.", ResourceType=None,
-                 ResourceId=None,
-                 OrderingTimestamp=None):
-        super(CompliantEvaluation, self).__init__(
-            'COMPLIANT',
-            Annotation,
-            ResourceType=ResourceType,
-            ResourceId=ResourceId,
-            OrderingTimestamp=OrderingTimestamp,
-        )
-
-
-class NonCompliantEvaluation(AWSConfigEvaluation):
-    def __init__(self, Annotation, ResourceType=None, ResourceId=None,
-                 OrderingTimestamp=None):
-        super(NonCompliantEvaluation, self).__init__(
-            'NON_COMPLIANT', Annotation,
-            ResourceType=ResourceType,
-            ResourceId=ResourceId,
-            OrderingTimestamp=OrderingTimestamp
-        )
-
-
-class NotApplicableEvaluation(AWSConfigEvaluation):
-    def __init__(self, ResourceType, ResourceId=None,
-                 OrderingTimestamp=None):
-        super(NotApplicableEvaluation, self).__init__(
-            'NOT_APPLICABLE',
-            "The rule doesn't apply to resources of type " + ResourceType + ".",
-            ResourceType=ResourceType,
-            ResourceId=ResourceId,
-            OrderingTimestamp=OrderingTimestamp
-        )
-
-
-class InsufficientDataEvaluation(AWSConfigEvaluation):
-    def __init__(self, Annotation, ResourceType=None, ResourceId=None,
-                 OrderingTimestamp=None):
-        super(InsufficientDataEvaluation, self).__init__(
-            'INSUFFICIENT_DATA', Annotation,
-            ResourceType=ResourceType,
-            ResourceId=ResourceId,
-            OrderingTimestamp=OrderingTimestamp
-        )
