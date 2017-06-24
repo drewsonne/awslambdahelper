@@ -9,25 +9,40 @@ Rules
 .. autoclass:: awslambdahelper.AWSConfigRule
   :members:
 
+  .. autoattribute:: CALL_TYPE_CONFIGURATION_CHANGE
+
 -----------
 Evaluations
 -----------
 
-.. autoclass:: awslambdahelper.AWSConfigRule
-  :members:
+~~~~~~~~~~~~~~~~~~~
+CompliantEvaluation
+~~~~~~~~~~~~~~~~~~~
 
 .. autoclass:: awslambdahelper.CompliantEvaluation
   :members:
 
 
-.. autoclass:: NonCompliantEvaluation
+~~~~~~~~~~~~~~~~~~~~~~
+NonCompliantEvaluation
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: awslambdahelper.NonCompliantEvaluation
   :members:
 
 
-.. autoclass:: NotApplicableEvaluation
+~~~~~~~~~~~~~~~~~~~~~~~
+NotApplicableEvaluation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: awslambdahelper.NotApplicableEvaluation
   :members:
 
 
-.. autoclass:: InsufficientDataEvaluation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+InsufficientDataEvaluation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. autoclass:: awslambdahelper.InsufficientDataEvaluation
   :members:
 

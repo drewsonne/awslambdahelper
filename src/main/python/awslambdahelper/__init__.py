@@ -1,18 +1,31 @@
-import json
+import abc
+import json, boto3
 
-from awslambdahelper.configrule import UnimplementedMethod
 from awslambdahelper.evaluation import AWSConfigEvaluation
 
 
 class AWSConfigRule(object):
+    #: Specifies an AWS Config Rule which is triggered by a resource configuration
     CALL_TYPE_CONFIGURATION_CHANGE = 'ConfigurationItemChangeNotification'
+    #: Specifies an AWS Config Rule which is triggered on a scheduled basis
     CALL_TYPE_SCHEDULED = 'ScheduledNotification'
-    APPLICABLE_RESOURCES = None
+    #: List of resources which this rule can evaluate. Only application for ConfigurationChange rules.
+    APPLICABLE_RESOURCES = []
 
     @classmethod
     def handler(cls, event, context):
         """
         Allow a single entrypoint without extra boilerplate code.
+
+        >>> from awslambdahelper import AWSConfigRule,InsufficientDataEvaluation
+        >>> class MyAwesomeRule(AWSConfigRule):
+        ...     APPLICABLE_RESOURCES = ["AWS::EC2::Instance"]
+        ...     def find_violation_config_change(self, rule_parameters, config):
+        ...         return [InsufficientDataEvaluation()]
+
+        >>> lambda_handler = MyAwesomeRule.handler # The entrypoint for lambda would be set as "file_name.lambda_handler"
+
+
         :param event:
         :param context:
         :return:
@@ -24,6 +37,7 @@ class AWSConfigRule(object):
         """
         If this rule is for handling ConfigurationChange events, then the "Applicable Resources" attribute must be set.
         If this is for handling Scheduled events, then no item is required.
+
         :param applicable_resources:
         """
         if applicable_resources is None:
@@ -51,6 +65,7 @@ class AWSConfigRule(object):
         See Event Attributes in
         http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html \
         #w2ab1c13c33c27c15c15
+
         :param event:
         :param context:
         :return:
@@ -130,11 +145,25 @@ class AWSConfigRule(object):
         return violations
 
     def find_violation_config_change(self, rule_parameters, config):
-        raise UnimplementedMethod(type(self).__name__ + ":find_violation_config_change() is not implemented.")
+        """
+        Place holder function for configuration change rules. Needs to be overriden by super class.
+
+        :raises NotImplementedError
+        :param rule_parameters:
+        :param config:
+        :return: None
+        """
+        raise NotImplementedError(type(self).__name__ + ":find_violation_config_change() is not implemented.")
 
     def find_violation_scheduled(self, rule_parameters, accountid):
-        raise UnimplementedMethod(type(self).__name__ + ":find_violation_scheduled() is not implemented.")
+        """
+        Place holder function for configuration change rules. Needs to be overriden by super class.
 
+        :param rule_parameters:
+        :param accountid:
+        :return: None
+        """
+        raise NotImplementedError(type(self).__name__ + ":find_violation_scheduled() is not implemented.")
 
 
 class CompliantEvaluation(AWSConfigEvaluation):
