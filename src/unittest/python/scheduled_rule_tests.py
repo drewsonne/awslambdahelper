@@ -2,8 +2,8 @@ import json, unittest
 
 from mock import MagicMock
 
-from awslambdahelper.configrule import AWSConfigRule
-from awslambdahelper.evaluation import CompliantEvaluation
+from awslambdahelper import AWSConfigRule
+from awslambdahelper import CompliantEvaluation
 
 
 class TestScheduledRuleTsts(unittest.TestCase):
@@ -80,9 +80,7 @@ class TestScheduledRuleTsts(unittest.TestCase):
                     ResourceId="i-00000000"
                 )]
 
-        mock_rule = MockScheduleRule(
-            applicable_resources=["AWS::EC2::Instance"]
-        )
+        mock_rule = MockScheduleRule()
 
         for lambda_event, put_evaluations_response in self.parameters:
             mock_rule.put_evaluations = MagicMock()

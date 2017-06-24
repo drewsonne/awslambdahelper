@@ -1,6 +1,6 @@
-===================================
-awslambdahelper 1.1.4 documentation
-===================================
+=======================================
+awslambdahelper |release| documentation
+=======================================
 
 .. image:: https://www.quantifiedcode.com/api/v1/project/bb53f496a1cc45f780342fc973270298/badge.svg
   :target: https://www.quantifiedcode.com/app/project/bb53f496a1cc45f780342fc973270298
@@ -21,7 +21,3 @@ Abstracts the more mundane aspects of lambda resources
   tutorial
   api
   changes
-
-------------------
-Indices and tables
-------------------
