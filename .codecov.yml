@@ -1,0 +1,10 @@
+coverage:
+  range: 60..100
+  round: nearest
+  precision: 2
+
+ignore:
+ - "build.py"
+ - "setup.py"
+ - "src/unittest/**/*"
+ - "docs/**/*"
