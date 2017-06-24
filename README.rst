@@ -30,8 +30,9 @@ Installation
 QuickStart
 ----------
 
-
-Create a class
+~~~~~~~~~~~~~~~~~~~~~
+Create a Python class
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -45,7 +46,9 @@ Create a class
         )]
 
 
-Set your AWS Lambda handler
+~~~~~~~~~~~~~~~~~~~~~~~~
+Setup AWS Lambda handler
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -54,5 +57,11 @@ Set your AWS Lambda handler
     Handler = "my_lambda_code.MyConfigRule.handler'
   )
 
-And how create your AWS Config rule as 
+~~~~~~~~~~~~~~~~~~~~~~
+Create AWS Config Rule
+~~~~~~~~~~~~~~~~~~~~~~
+
 `Getting Started with Custom Rules <http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_getting-started.html>`_.
+
+
+That's it! For a more indepth guide, `read the docs<http://awslambdahelper.readthedocs.io/en/latest/>`_.
