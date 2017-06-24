@@ -1,5 +1,5 @@
 ===================================
-awslambdahelper 1.1.4 documentation
+awslambdahelper |package_version| documentation
 ===================================
 
 .. image:: https://www.quantifiedcode.com/api/v1/project/bb53f496a1cc45f780342fc973270298/badge.svg
