@@ -51,7 +51,7 @@ class TestArgParserTests(unittest.TestCase):
     @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_directory')
     @patch('awslambdahelper.cli.BundlerArgumentParser._test_not_a_directory')
     @patch('awslambdahelper.cli.BundlerArgumentParser._test_missing_requirements')
-    def test_parser_missing_req(self, missing_requirements, not_a_directory, missing_directory):
+    def test_parser_not_a_dir(self, missing_requirements, not_a_directory, missing_directory):
         missing_requirements.return_value = None
         not_a_directory.return_value = 'not a directory'
         missing_directory.return_value = None
