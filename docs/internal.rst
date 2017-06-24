@@ -4,9 +4,9 @@ Private Class and Function Reference
 
 ..
 
-----------------------------
-lambdahelper-bunder cli tool
-----------------------------
+------------------------------
+`lambdahelper-bunder` cli tool
+------------------------------
 
 .. autofunction:: awslambdahelper.cli.main
 

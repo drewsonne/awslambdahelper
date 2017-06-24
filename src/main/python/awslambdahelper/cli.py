@@ -13,6 +13,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
     """
     Parses command line arguments, and validates the integrity of the file paths and directories provided.
     """
+
     def __init__(self):
         """
 
@@ -24,11 +25,21 @@ class BundlerArgumentParser(argparse.ArgumentParser):
 
     def _parse_known_args(self, arg_strings, namespace):
         """
-        Parse as the parent does, and then optionally raise an ArgumentException is --send-to-cfn is missing --owner.
+        Parse as the parent does, and then optionally raise an ArgumentException is :code:`--send-to-cfn` is missing
+        :code:`--owner`.
 
-        :param arg_strings:
-        :param namespace:
-        :return:
+        :param arg_strings: List of cli argument strings passed to the arg parser.
+        :type arg_strings: list
+        :param namespace: Namespace object, created by super :py:class:`argparse.ArgumentParser` namespace object.
+        :type namespace: argparse.Namespace
+        :returns:
+
+                namespace(*argparse.Namespace*)
+                    is the super :py:class:`argparse.ArgumentParser` namespace object, with the with the addition of the
+                    arguments parse in this class.
+
+                unparsed_args(*list[str]*)
+                    are args which were not parsed by this ArgumentParser.
         """
         namespace, unparsed_args = super(BundlerArgumentParser, self)._parse_known_args(arg_strings, namespace)
         namespace.directory = self._full_path(namespace.directory)
@@ -54,7 +65,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         """
         If the specified directory is missing, return an error message
 
-        :param target_directory:
+        :param target_directory: Fully qualified path to test
         :return: An error message, or False if the requirements file exists.
         :rtype: Union[str,bool]
         """
@@ -67,7 +78,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         """
         If the specified path is not a directory, return an error message
 
-        :param target_directory:
+        :param target_directory: Fully qualified path to test
         :return: An error message, or False if the requirements file exists.
         :rtype: Union[str,bool]
         """
@@ -80,7 +91,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         """
         If the requirements path does not exist, return an error method
 
-        :param requirements_path:
+        :param requirements_path: Fully qualified path to test.
         :return: An error message, or False if the requirements file exists.
         :rtype: Union[str,bool]
         """
