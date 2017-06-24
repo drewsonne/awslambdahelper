@@ -68,6 +68,12 @@ class BundlerArgumentParser(argparse.ArgumentParser):
 
 
 def main(args=sys.argv[1:]):
+    """
+    Entrypoint for our bundler cli tool
+
+    :param args:
+    :return:
+    """
     cli_args = BundlerArgumentParser().parse_args(args)
 
     target_directory = cli_args.directory
@@ -94,6 +100,14 @@ def main(args=sys.argv[1:]):
 
 
 def create_zip(target_directory, working_directory):
+    """
+    Given a target_directory to compress, and a working_directory to place the files in, compress them
+    in a zip archive.
+
+    :param target_directory:
+    :param working_directory:
+    :return:
+    """
     zip_destination = target_directory.rstrip(os.path.sep) + '.zip'
     print "Creating zip archive: '" + zip_destination + "'"
 
@@ -104,6 +118,14 @@ def create_zip(target_directory, working_directory):
 
 
 def zipdir(path, ziph, zip_path_prefix):
+    """
+    Recursively walk our directory path, and add files to the zip archive.
+
+    :param path:
+    :param ziph:
+    :param zip_path_prefix:
+    :return:
+    """
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
         for file in files:
@@ -114,24 +136,31 @@ def zipdir(path, ziph, zip_path_prefix):
 
 
 def process_setup_cfg(project_dir, working_directory):
-    if sys.platform == 'darwin':
-        setup_cfg_path = os.path.join(project_dir, 'setup.cfg')
-        temporary_cfg_path = os.path.join(working_directory, 'setup.cfg')
+    """
+    If the setup.cfg does not exist, or does not have an `[install`] section,
+    create and append a `prefix= ` value.
 
-        # If we already have a setup.cfg, modify it
-        if os.path.exists(setup_cfg_path):
-            setup_cfg = ConfigParser.ConfigParser()
-            setup_cfg.read(setup_cfg_path)
-            if 'install' not in setup_cfg.sections():
-                setup_cfg.add_section('install')
-            setup_cfg.set('install', 'prefix', '')
+    :param project_dir:
+    :param working_directory:
+    :return:
+    """
+    setup_cfg_path = os.path.join(project_dir, 'setup.cfg')
+    temporary_cfg_path = os.path.join(working_directory, 'setup.cfg')
 
-            with open(temporary_cfg_path, 'w') as fp:
-                setup_cfg.write(fp)
-        # If we don't, just write a blank file out.
-        else:
-            with open(temporary_cfg_path, 'w+') as fp:
-                fp.write("""[install]\nprefix= """)
+    # If we already have a setup.cfg, modify it
+    if os.path.exists(setup_cfg_path):
+        setup_cfg = ConfigParser.ConfigParser()
+        setup_cfg.read(setup_cfg_path)
+        if 'install' not in setup_cfg.sections():
+            setup_cfg.add_section('install')
+        setup_cfg.set('install', 'prefix', '')
+
+        with open(temporary_cfg_path, 'w') as fp:
+            setup_cfg.write(fp)
+    # If we don't, just write a blank file out.
+    else:
+        with open(temporary_cfg_path, 'w+') as fp:
+            fp.write("""[install]\nprefix= """)
 
 
 if __name__ == '__main__':
