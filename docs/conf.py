@@ -14,6 +14,8 @@
 # Let us pull the verison from build.py
 import sys, os
 import sphinx_rtd_theme
+sys.path.insert(0, './src/main/python')
+
 
 _version = ('1','1','4')
 
