@@ -8,13 +8,13 @@ import datetime
 
 
 class AWSConfigEvaluation(object):
-    #: Define an evaluation of a resource as compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    #: Define an evaluation of a resource as compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_. # noqa
     TYPE_COMPLIANT = 'COMPLIANT'
-    #: Define an evaluation of a resource as not being compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    #: Define an evaluation of a resource as not being compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_. # noqa
     TYPE_NON_COMPLIANT = 'NON_COMPLIANT'
-    #: Define a rule as not being applicable to a specific resource. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    #: Define a rule as not being applicable to a specific resource. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_. # noqa
     TYPE_NOT_APPLICABLE = 'NOT_APPLICABLE'
-    #: Define a rule as not having enough insufficient data for evaluate a resource. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_.
+    #: Define a rule as not having enough insufficient data for evaluate a resource. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_. # noqa
     TYPE_INSUFFICIENT_DATA = 'INSUFFICIENT_DATA'
 
     def __init__(self, Type, Annotation, ResourceType=None, ResourceId=None,
@@ -43,7 +43,8 @@ class AWSConfigEvaluation(object):
             OrderingTimestamp=None):
         """
         Sets variables for the evaluation, after creation.
-        See the `Evaluation <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html>`_ resource for details.
+        See the
+        `Evaluation <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html>`_ resource for details.
 
         :param ResourceType:
         :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource
