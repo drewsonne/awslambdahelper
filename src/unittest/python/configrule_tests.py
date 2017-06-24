@@ -1,5 +1,5 @@
 import unittest
-from awslambdahelper.configrule import AWSConfigRule, UnimplementedMethod
+from awslambdahelper import AWSConfigRule, UnimplementedMethod
 
 class ConfigRuleTests(unittest.TestCase):
 
