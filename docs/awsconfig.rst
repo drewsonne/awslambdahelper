@@ -14,9 +14,9 @@ and *ConfigurationChange* rules for
 Create a new class, write it in a function to be set as the lambda handler, and override either the
 :code:`find_violation_scheduled(...)` function or :code:`find_violation_config_change(...)`.
 
-=========================
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Configuration Change Rule
-=========================
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 >>> from awsconfig_lambdahelper.configrule import AWSConfigRule
@@ -47,9 +47,9 @@ Configuration Change Rule
 ...    )
 ...    my_rule.lambda_handler(event, context)
 
-==============
+~~~~~~~~~~~~~~
 Scheduled Rule
-==============
+~~~~~~~~~~~~~~
 
 
 >>>    from awsconfig_lambdahelper.configrule import AWSConfigRule
