@@ -1,6 +1,6 @@
 from pybuilder.core import use_plugin, init, Author
 
-_version = ('1','1','6')
+_version = ('1','1','7')
 
 use_plugin('exec')
 use_plugin("python.core")
@@ -36,6 +36,8 @@ def init(project):
     project.set_property("flake8_break_build", True)
 
     project.set_property("coverage_threshold_warn", 50)
+
+    project.set_property('skip_upload_docs', True)
 
     project.set_property('distutils_upload_repository', 'https://upload.pypi.org/legacy/')
     project.set_property("distutils_use_setuptools", True)

@@ -8,6 +8,9 @@ import datetime
 
 
 class AWSConfigEvaluation(object):
+    """
+    Represents a response payload to an evaluation event
+    """
     #: Define an evaluation of a resource as compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_. # noqa
     TYPE_COMPLIANT = 'COMPLIANT'
     #: Define an evaluation of a resource as not being compliant to a rule. See `Evaluation.ComplianceType <http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType>`_. # noqa

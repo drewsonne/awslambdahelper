@@ -5,6 +5,9 @@ from awslambdahelper.evaluation import AWSConfigEvaluation
 
 
 class AWSConfigRule(object):
+    """
+    Defines the business logic for processing either scheduled or config change AWS Config rules
+    """
     #: Specifies an AWS Config Rule which is triggered by a resource configuration
     CALL_TYPE_CONFIGURATION_CHANGE = 'ConfigurationItemChangeNotification'
     #: Specifies an AWS Config Rule which is triggered on a scheduled basis
