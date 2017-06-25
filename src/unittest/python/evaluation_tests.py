@@ -39,6 +39,7 @@ class TestEvaluations(unittest.TestCase):
     def test_non_compliant_evaluation(self):
         evaluation = NonCompliantEvaluation(
             Annotation='non-compliantevaluation',
+        ).set(
             OrderingTimestamp='my-timestamp'
         )
 
@@ -47,5 +48,4 @@ class TestEvaluations(unittest.TestCase):
             'ComplianceResourceId': None,
             'ComplianceResourceType': None,
             'ComplianceType': 'NON_COMPLIANT',
-            'OrderingTimestamp': 'my-timestamp'
         })
