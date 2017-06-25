@@ -1,6 +1,7 @@
 sudo: false
 language: python
 cache: pip
+skip_upload_docs: true
 python:
 - '2.7'
 
