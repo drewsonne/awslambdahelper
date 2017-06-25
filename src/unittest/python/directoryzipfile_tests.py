@@ -42,16 +42,3 @@ class TestArgParserTests(unittest.TestCase):
 
         calls = map(lambda file: call(os.path.join(self.test_dir, file), file), self.zip_structure)
         mock_write.assert_has_calls(calls)
-
-    @patch('os.walk')
-    def test_zipdir(self, os_walk):
-        os_walk.return_value = ((self.test_dir, (), self.zip_structure),)
-        mock_write = MagicMock()
-
-        zip = DirectoryZipFile(self.test_dir)
-        zip.write = mock_write
-        zip.zipdir(self.test_dir, self.test_dir)
-        zip.close()
-
-        calls = map(lambda file: call(os.path.join(self.test_dir, file), file), self.zip_structure)
-        mock_write.assert_has_calls(calls)
