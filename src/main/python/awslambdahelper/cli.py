@@ -131,17 +131,11 @@ class LambdahelperBundler(object):
         :return:
         """
 
-        if args is None:
-            args = sys.argv[1:]
-
         (self.target_directory,
          self.working_directory,
          self.requirements_path) = self.parse_args(args)
 
-        for file in glob.glob(self.target_directory + os.path.sep + "*.py"):
-            shutil.copy(file, self.working_directory)
-
-        shutil.copy(self.requirements_path, self.working_directory)
+        self.copy_lambda_package_files()
 
         SetupCfgFile(
             os.path.join(self.target_directory, 'setup.cfg'),
@@ -156,14 +150,25 @@ class LambdahelperBundler(object):
 
         DirectoryZipFile(self.working_directory).create_archive()
 
+    def copy_lambda_package_files(self):
+        """
+        Copy lambda files to working directory.
+
+        :return:
+        """
+        for file in glob.glob(self.target_directory + os.path.sep + "*.py"):
+            shutil.copy(file, self.working_directory)
+
+        shutil.copy(self.requirements_path, self.working_directory)
+
     @staticmethod
-    def parse_args(args):
+    def parse_args(args=None):
         """
         Parse the args
         :param args:
         :return:
         """
-        cli_args = BundlerArgumentParser().parse_args(args)
+        cli_args = BundlerArgumentParser().parse_args(sys.argv[1:] if args is None else args)
         return (
             cli_args.directory,
             tempfile.mkdtemp(),
