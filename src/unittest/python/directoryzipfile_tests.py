@@ -25,33 +25,33 @@ class TestArgParserTests(unittest.TestCase):
         ]
 
         self.test_dir = tempfile.mkdtemp()
-        self.zip_directory = os.path.join(self.test_dir, 'zip_dir')
-        os.makedirs(self.zip_directory)
-        os.makedirs(os.path.join(self.zip_directory, 'a'))
-        os.makedirs(os.path.join(self.zip_directory, 'b'))
-
-        source_files = map(partial(os.path.join, self.zip_directory), self.zip_structure)
-        map(lambda file: open(file, 'w+').write(file), source_files)
 
     def tearDown(self):
         shutil.rmtree(self.test_dir)
 
-    def test_directoryzip_integration(self):
-        zipdirectory = DirectoryZipFile(self.zip_directory)
+    @patch('os.walk')
+    def test_directoryzip_integration(self, os_walk):
+        os_walk.return_value = ((self.test_dir, (), self.zip_structure),)
+
+        mock_write = MagicMock()
+        zipdirectory = DirectoryZipFile(self.test_dir)
+        zipdirectory.write = mock_write
         zipdirectory.create_archive()
         zipdirectory.close()
 
-        created_archive = ZipFile(zipdirectory.archive_path)
-        archive_files = created_archive.namelist()
 
-        self.assertEqual(archive_files, self.zip_structure)
+        calls = map(lambda file: call(os.path.join(self.test_dir, file), file), self.zip_structure)
+        mock_write.assert_has_calls(calls)
 
-    def test_zipdir(self):
-        zip = DirectoryZipFile(self.zip_directory)
-        zip.zipdir(self.zip_directory, self.zip_directory)
+    @patch('os.walk')
+    def test_zipdir(self, os_walk):
+        os_walk.return_value = ((self.test_dir, (), self.zip_structure),)
+        mock_write = MagicMock()
+
+        zip = DirectoryZipFile(self.test_dir)
+        zip.write = mock_write
+        zip.zipdir(self.test_dir, self.test_dir)
         zip.close()
 
-        created_archive = ZipFile(zip.archive_path)
-        archive_files = created_archive.namelist()
-
-        self.assertEqual(archive_files, self.zip_structure)
+        calls = map(lambda file: call(os.path.join(self.test_dir, file), file), self.zip_structure)
+        mock_write.assert_has_calls(calls)
