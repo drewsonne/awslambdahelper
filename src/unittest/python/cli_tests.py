@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""
+Test the CLI Argument Parser
+"""
 import os
 import unittest
 from argparse import Namespace, ArgumentError
@@ -9,23 +13,19 @@ from awslambdahelper.cli import BundlerArgumentParser
 
 class TestArgParserTests(unittest.TestCase):
     def setUp(self):
-        self.original = {}
+        self.original = dict()
         self.original['os.path.exists'] = os.path.exists
         self.original['os.path.isdir'] = os.path.exists
         self.original['os.path.expanduser'] = os.path.expanduser
         self.original['os.path.abspath'] = os.path.abspath
 
         self.path_exists = patch('os.path.exists').start()
-        self.addCleanup(self.path_exists.stop)
 
         self.path_isdir = patch('os.path.isdir').start()
-        self.addCleanup(self.path_isdir.stop)
 
         self.path_expanduser = patch('os.path.expanduser').start()
-        self.addCleanup(self.path_expanduser.stop)
 
         self.path_abspath = patch('os.path.abspath').start()
-        self.addCleanup(self.path_abspath.stop)
 
     def tearDown(self):
         os.path.exists = self.original['os.path.exists']
@@ -43,7 +43,7 @@ class TestArgParserTests(unittest.TestCase):
 
         parser = BundlerArgumentParser()
 
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(ArgumentError, parser):
             parser._parse_known_args([
                 '--directory', 'world',
             ], Namespace(requirements_name='requirements.txt'))
@@ -58,7 +58,7 @@ class TestArgParserTests(unittest.TestCase):
 
         parser = BundlerArgumentParser()
 
-        with self.assertRaises(ArgumentError):
+        with self.assertRaises(ArgumentError, parser):
             parser._parse_known_args([
                 '--directory', 'world',
             ], Namespace(requirements_name='requirements.txt'))

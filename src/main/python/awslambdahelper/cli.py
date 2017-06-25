@@ -1,4 +1,6 @@
 import ConfigParser
+import zipfile
+
 import argparse
 import glob
 import os
@@ -6,7 +8,7 @@ import shutil
 import sys
 import tempfile
 import pip
-import zipfile
+from zipfile import ZipFile
 
 
 class BundlerArgumentParser(argparse.ArgumentParser):
@@ -16,7 +18,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
 
     def __init__(self):
         """
-
+        Add the cli argument schema
         """
         super(BundlerArgumentParser, self).__init__()
         self.add_argument('--directory', help='Path to the directory to bundle for AWS lambda.')
@@ -66,6 +68,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         If the specified directory is missing, return an error message
 
         :param target_directory: Fully qualified path to test
+        :type target_directory: str
         :return: An error message, or False if the requirements file exists.
         :rtype: Union[str,bool]
         """
@@ -79,6 +82,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         If the specified path is not a directory, return an error message
 
         :param target_directory: Fully qualified path to test
+        :type target_directory: str
         :return: An error message, or False if the requirements file exists.
         :rtype: Union[str,bool]
         """
@@ -92,6 +96,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         If the requirements path does not exist, return an error method
 
         :param requirements_path: Fully qualified path to test.
+        :type requirements_path: str
         :return: An error message, or False if the requirements file exists.
         :rtype: Union[str,bool]
         """
@@ -113,107 +118,141 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         return os.path.abspath(dir_)
 
 
-def main(args=None):
-    """
-    Entrypoint for our bundler cli tool
+class LambdahelperBundler(object):
+    def run(self, args=None):
+        """
+        Entrypoint for our bundler cli tool
 
-    :param args: defaults to :py:data:`sys.argv[1:]`
-    :return:
-    """
+        :param args: defaults to :py:data:`sys.argv[1:]`
+        :return:
+        """
 
-    if args is None:
-        args = sys.argv[1:]
+        if args is None:
+            args = sys.argv[1:]
 
-    cli_args = BundlerArgumentParser().parse_args(args)
+        (self.target_directory,
+         self.working_directory,
+         self.requirements_path) = self.parse_args(args)
 
-    target_directory = cli_args.directory
-    requirements_path = cli_args.requirements_path
+        for file in glob.glob(self.target_directory + os.path.sep + "*.py"):
+            shutil.copy(file, self.working_directory)
 
-    # Create temporary working directory
-    working_directory = tempfile.mkdtemp()
-    print "working in: " + working_directory
+        shutil.copy(self.requirements_path, self.working_directory)
 
-    for file in glob.glob(target_directory + os.path.sep + "*.py"):
-        shutil.copy(file, working_directory)
+        self.process_setup_cfg()
 
-    shutil.copy(requirements_path, working_directory)
+        pip.main([
+            "install",
+            "-t", self.working_directory,
+            "-r", self.requirements_path
+        ])
 
-    process_setup_cfg(target_directory, working_directory)
+        self.create_zip()
 
-    pip.main([
-        "install",
-        "-t", working_directory,
-        "-r", requirements_path
-    ])
+    @staticmethod
+    def parse_args(args):
+        """
+        Parse the args
+        :param args:
+        :return:
+        """
+        cli_args = BundlerArgumentParser().parse_args(args)
+        return (
+            cli_args.directory,
+            tempfile.mkdtemp(),
+            cli_args.requirements_path
+        )
 
-    create_zip(target_directory, working_directory)
+    def process_setup_cfg(self):
+        """
+        If the setup.cfg does not exist, or does not have an `[install`] section,
+        create and append a `prefix= ` value.
 
+        :param project_dir:
+        :param working_directory:
+        :return:
+        """
+        setup_cfg_path = os.path.join(self.target_directory, 'setup.cfg')
+        temp_cfg_path = os.path.join(self.working_directory, 'setup.cfg')
 
-def create_zip(target_directory, working_directory):
-    """
-    Given a target_directory to compress, and a working_directory to place the files in, compress them
-    in a zip archive.
+        # If we already have a setup.cfg, modify it
+        if os.path.exists(setup_cfg_path):
+            self.update_setup_cfg(setup_cfg_path, temp_cfg_path)
+        # If we don't, just write a blank file out.
+        else:
+            self.create_setup_cfg(temp_cfg_path)
 
-    :param target_directory:
-    :param working_directory:
-    :return:
-    """
-    zip_destination = target_directory.rstrip(os.path.sep) + '.zip'
-    print "Creating zip archive: '" + zip_destination + "'"
+    @staticmethod
+    def update_setup_cfg(cfg_path, build_cfg_path):
+        """
+        Read the existing setup.cfg and add the install.prefix
 
-    zipf = zipfile.ZipFile(zip_destination, 'w', zipfile.ZIP_DEFLATED)
-    zipdir(working_directory, zipf, working_directory.rstrip('/') + '/')
-
-    zipf.close()
-
-
-def zipdir(path, ziph, zip_path_prefix):
-    """
-    Recursively walk our directory path, and add files to the zip archive.
-
-    :param path: Path to walk which contains our files to be added to the zip archive.
-    :param ziph: zipfile handler
-    :type ziph: zipfile.ZipFile
-    :param zip_path_prefix:
-    :type basestring
-    :return:
-    """
-    # ziph is zipfile handle
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            source_file = os.path.join(root, file)
-            archive_file = source_file.replace(zip_path_prefix, '')
-            print "    Adding file: '" + archive_file + "'"
-            ziph.write(source_file, archive_file)
-
-
-def process_setup_cfg(project_dir, working_directory):
-    """
-    If the setup.cfg does not exist, or does not have an `[install`] section,
-    create and append a `prefix= ` value.
-
-    :param project_dir:
-    :param working_directory:
-    :return:
-    """
-    setup_cfg_path = os.path.join(project_dir, 'setup.cfg')
-    temporary_cfg_path = os.path.join(working_directory, 'setup.cfg')
-
-    # If we already have a setup.cfg, modify it
-    if os.path.exists(setup_cfg_path):
+        :param existing_cfg_path: Path to the existing setup.cfg
+        :type existing_cfg_path: str
+        :param temp_cfg_path:
+        :type temp_cfg_path: str
+        :return:
+        """
         setup_cfg = ConfigParser.ConfigParser()
-        setup_cfg.read(setup_cfg_path)
+        setup_cfg.read(cfg_path)
         if 'install' not in setup_cfg.sections():
             setup_cfg.add_section('install')
         setup_cfg.set('install', 'prefix', '')
 
-        with open(temporary_cfg_path, 'w') as fp:
+        with open(build_cfg_path, 'w') as fp:
             setup_cfg.write(fp)
-    # If we don't, just write a blank file out.
-    else:
-        with open(temporary_cfg_path, 'w+') as fp:
+
+    @staticmethod
+    def create_setup_cfg(temp_cfg_path):
+        """
+        Create base setup.cfg file.
+
+        :param cfg_path: Path to setup.cfg
+        :type cfg_path: str
+        :return:
+        """
+        with open(temp_cfg_path, 'w+') as fp:
             fp.write("""[install]\nprefix= """)
 
 
+class DirectoryZipFile(ZipFile, object):
+    def __init__(self, target):
+        zip_destination = target.rstrip(os.path.sep) + '.zip'
+
+        ZipFile.__init__(self, zip_destination, 'w', zipfile.ZIP_DEFLATED)
+        self.source_path = target
+        self.archive_path = zip_destination
+
+    def create_archive(self):
+        """
+        Given a target_directory to compress, and a working_directory to place the files in, compress them
+        in a zip archive.
+
+        :param target_directory:
+        :param working_directory:
+        :return:
+        """
+        self.zipdir(self.source_path, self.source_path.rstrip('/') + '/')
+
+    def zipdir(self, path, zip_path_prefix):
+        """
+        Recursively walk our directory path, and add files to the zip archive.
+
+        :param path: Path to walk which contains our files to be added to the zip archive.
+        :param ziph: zipfile handler
+        :type ziph: zipfile.ZipFile
+        :param zip_path_prefix:
+        :type basestring
+        :return:
+        """
+        # ziph is zipfile handle
+        for root, dirs, files in os.walk(path):
+            for file_name in files:
+                source_file = os.path.join(root, file_name)
+                archive_file = source_file.replace(zip_path_prefix, '')
+                print "    Adding file: '" + archive_file + "'"
+                self.write(source_file, archive_file)
+
+
 if __name__ == '__main__':
-    main()
+    LambdahelperBundler().run()
