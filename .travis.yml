@@ -1,5 +1,6 @@
 sudo: false
 language: python
+cache: pip
 python:
 - '2.7'
 
@@ -17,7 +18,6 @@ deploy:
   distributions: "sdist bdist_wheel"
   skip_cleanup: true
   server: https://upload.pypi.org/legacy/
-  cache: pip
   user:
     secure: QwyVogZcKxeMIh1dVGzzo/lqVV9DnImFdnAVnjUxMAmI1h+8QUAVFyyp8ldtpelLOD5wO/WV1Bivu3uQ4BmTKCKIcPBexg36/jDYFJyWubK797yLMVUnwyCa1nbwMSw+ioN7goILs6piJp9cEKnxhiTCd8mQxawVjlZwAIR+EoEZOh7ZDvHmAGbGBTepEnob7a4/u1/9wl7VOdL3s2rL4CGQZKLsxLR0p2dOVf3AaW2HFSA6C2lzni/r32oKjVnNKVsMIFmTBhU6kldA0nq+G1iAhRTiXVLZHOH6kip9351ZXYSk/20Tg87CG163SEcI2Kx0jUovMT/mnRo615IIFNYRAWuU0Nsg5TTDrNbMwut7cnoQeNqE+wx1REaLNBqKUvp8WweTwz4v/HeYOO8FFmttbqU34bnlcv11ruNv1OOjCEZb3TGoEMP/qdTrRL/6Nt+/H5GsK8kyrYvGeR/KmyM1GhM5nBLvs5QxGV3pB1NBnpCPY2sr+QHE6vcyPvE1jTThbX8hm1sEQozXJ82OKdHjtmDev450fHvThiEri3NZu4AEQdmoHM35j0auOye5IDnJi/zx+UAIxmh6RJGViIy302Z4EsTbLoS7+NgW1FZcl6c80MlIVciEDy+h0Mv9PEHZOE2g20mFy0As163kL4wqnOh0ep6aF6WYrIljwpo=
   password:
