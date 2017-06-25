@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-from awslambdahelper import AWSConfigEvaluation, InsufficientDataEvaluation
+from awslambdahelper import AWSConfigEvaluation, InsufficientDataEvaluation, NonCompliantEvaluation
 
 
 class TestEvaluations(unittest.TestCase):
@@ -34,4 +34,18 @@ class TestEvaluations(unittest.TestCase):
             'ComplianceType': 'INSUFFICIENT_DATA',
             'OrderingTimestamp': 'ordering-timestamp'
 
+        })
+
+    def test_non_compliant_evaluation(self):
+        evaluation = NonCompliantEvaluation(
+            Annotation='non-compliantevaluation',
+            OrderingTimestamp='my-timestamp'
+        )
+
+        self.assertDictEqual(evaluation.to_dict(), {
+            'Annotation': 'non-compliantevaluation',
+            'ComplianceResourceId': None,
+            'ComplianceResourceType': None,
+            'ComplianceType': 'NON_COMPLIANT',
+            'OrderingTimestamp': 'my-timestamp'
         })
