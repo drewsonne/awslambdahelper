@@ -5,9 +5,7 @@ Test the CLI Argument Parser
 import os
 import unittest
 from argparse import Namespace, ArgumentError
-
 from mock import patch, call
-
 from awslambdahelper.cli import BundlerArgumentParser
 
 

@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
 import json, unittest
-
 from mock import MagicMock
-
 from awslambdahelper import AWSConfigRule
 from awslambdahelper import CompliantEvaluation
 

@@ -184,7 +184,6 @@ class CompliantEvaluation(AWSConfigEvaluation):
                  ResourceId=None,
                  OrderingTimestamp=None):
         """
-
         :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.
         :type Annotation: str
         :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types
@@ -212,7 +211,6 @@ class NonCompliantEvaluation(AWSConfigEvaluation):
     def __init__(self, Annotation, ResourceType=None, ResourceId=None,
                  OrderingTimestamp=None):
         """
-
         :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.
         :type Annotation: str
         :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types
@@ -240,7 +238,6 @@ class NotApplicableEvaluation(AWSConfigEvaluation):
     def __init__(self, ResourceType, ResourceId=None,
                  OrderingTimestamp=None):
         """
-
         :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types
             <http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types>`_,
             and
@@ -267,7 +264,6 @@ class InsufficientDataEvaluation(AWSConfigEvaluation):
     def __init__(self, Annotation, ResourceType=None, ResourceId=None,
                  OrderingTimestamp=None):
         """
-
         :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.
         :type Annotation: str
         :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types
