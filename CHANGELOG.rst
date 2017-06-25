@@ -1,5 +1,5 @@
 --------------
-Release: 1.1.7
+Release: 1.1.8
 --------------
 Date: 25 June 2017
 
@@ -9,6 +9,7 @@ Changes since 1.1.6
 
  - Expanded test coverage
  - Expanded the documentation
+ - Refactored the cli tool to improve test coverage
 
 --------------
 Release: 1.1.6
