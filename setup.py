@@ -35,6 +35,8 @@ import glob
 import shutil
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
+print "SCRIPT_DIR:\n"
+print script_dir
 build_script = os.path.join(script_dir, "build.py")
 exit_code = 0
 try:
