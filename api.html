@@ -1,0 +1,506 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>4. API Reference &mdash; awslambdahelper 1.1.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="awslambdahelper 1.1.10 documentation" href="index.html"/>
+        <link rel="next" title="5. Private Class and Function Reference" href="internal.html"/>
+        <link rel="prev" title="1. Developer Guide" href="userguide.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> awslambdahelper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">1. Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#configuration-change-rule">2. Configuration Change Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#scheduled-rule">3. Scheduled Rule</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#rules">4.1. Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#evaluations">4.2. Evaluations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#compliantevaluation">4.2.1. CompliantEvaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#noncompliantevaluation">4.2.2. NonCompliantEvaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notapplicableevaluation">4.2.3. NotApplicableEvaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#insufficientdataevaluation">4.2.4. InsufficientDataEvaluation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal.html">5. Private Class and Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">6. What’s new in awslambdahelper |package_version|</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">awslambdahelper</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>4. API Reference</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="api-reference">
+<h1>4. API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="rules">
+<h2>4.1. Rules<a class="headerlink" href="#rules" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="awslambdahelper.AWSConfigRule">
+<em class="property">class </em><code class="descclassname">awslambdahelper.</code><code class="descname">AWSConfigRule</code><span class="sig-paren">(</span><em>applicable_resources=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#AWSConfigRule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.AWSConfigRule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the business logic for processing either scheduled or config change AWS Config rules</p>
+<p>If this rule is for handling ConfigurationChange events, then the “Applicable Resources” attribute must be set.
+If this is for handling Scheduled events, then no item is required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>applicable_resources</strong> (<em>Union</em><em>[</em><em>List</em><em>,</em><em>Tuple</em><em>]</em>) – A list of AWS resources which this rule evaluates. Only applicable for
+Configuration Change rules, and not Scheduled rules. See <a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types">Evaluating Additional Resource Types</a>,
+and
+<a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources">Supported AWS Resource Types</a>.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="awslambdahelper.AWSConfigRule.APPLICABLE_RESOURCES">
+<code class="descname">APPLICABLE_RESOURCES</code><em class="property"> = []</em><a class="headerlink" href="#awslambdahelper.AWSConfigRule.APPLICABLE_RESOURCES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of resources which this rule can evaluate. Only application for ConfigurationChange rules.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="awslambdahelper.AWSConfigRule.CALL_TYPE_CONFIGURATION_CHANGE">
+<code class="descname">CALL_TYPE_CONFIGURATION_CHANGE</code><em class="property"> = ‘ConfigurationItemChangeNotification’</em><a class="headerlink" href="#awslambdahelper.AWSConfigRule.CALL_TYPE_CONFIGURATION_CHANGE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies an AWS Config Rule which is triggered by a resource configuration</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="awslambdahelper.AWSConfigRule.CALL_TYPE_SCHEDULED">
+<code class="descname">CALL_TYPE_SCHEDULED</code><em class="property"> = ‘ScheduledNotification’</em><a class="headerlink" href="#awslambdahelper.AWSConfigRule.CALL_TYPE_SCHEDULED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specifies an AWS Config Rule which is triggered on a scheduled basis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="awslambdahelper.AWSConfigRule.evaluate_compliance">
+<code class="descname">evaluate_compliance</code><span class="sig-paren">(</span><em>rule_parameters</em>, <em>event</em>, <em>config=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#AWSConfigRule.evaluate_compliance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.AWSConfigRule.evaluate_compliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A facade to delegate the event to either the <a class="reference internal" href="internal.html#awslambdahelper.AWSConfigRule.find_violation_config_change" title="awslambdahelper.AWSConfigRule.find_violation_config_change"><code class="xref py py-meth docutils literal"><span class="pre">find_violation_config_change()</span></code></a>, or
+<a class="reference internal" href="internal.html#awslambdahelper.AWSConfigRule.find_violation_scheduled" title="awslambdahelper.AWSConfigRule.find_violation_scheduled"><code class="xref py py-meth docutils literal"><span class="pre">find_violation_scheduled()</span></code></a>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rule_parameters</strong> – A list of key/pairs which are to be provided to the rule.</li>
+<li><strong>event</strong> – </li>
+<li><strong>config</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first">dict</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="awslambdahelper.AWSConfigRule.find_violation_config_change">
+<code class="descname">find_violation_config_change</code><span class="sig-paren">(</span><em>rule_parameters</em>, <em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#AWSConfigRule.find_violation_config_change"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.AWSConfigRule.find_violation_config_change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Place holder function for configuration change rules. Needs to be overriden by super class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first">NotImplementedError</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rule_parameters</strong> – </li>
+<li><strong>config</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="awslambdahelper.AWSConfigRule.find_violation_scheduled">
+<code class="descname">find_violation_scheduled</code><span class="sig-paren">(</span><em>rule_parameters</em>, <em>accountid</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#AWSConfigRule.find_violation_scheduled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.AWSConfigRule.find_violation_scheduled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Place holder function for configuration change rules. Needs to be overriden by super class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rule_parameters</strong> – </li>
+<li><strong>accountid</strong> – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="awslambdahelper.AWSConfigRule.handler">
+<em class="property">classmethod </em><code class="descname">handler</code><span class="sig-paren">(</span><em>event</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#AWSConfigRule.handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.AWSConfigRule.handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow a single entrypoint without extra boilerplate code.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">awslambdahelper</span> <span class="k">import</span> <span class="n">AWSConfigRule</span><span class="p">,</span><span class="n">InsufficientDataEvaluation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyAwesomeRule</span><span class="p">(</span><span class="n">AWSConfigRule</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">APPLICABLE_RESOURCES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AWS::EC2::Instance&quot;</span><span class="p">]</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">find_violation_config_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_parameters</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">return</span> <span class="p">[</span><span class="n">InsufficientDataEvaluation</span><span class="p">()]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The entrypoint for lambda would be set as &quot;file_name.MyAwesomeRule.handler&quot;</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>event</strong> (<em>dict</em>) – See <a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html#w2ab1c13c33c27c15c15">Event Attributes</a>
+in the AWS Config Developer guide.</li>
+<li><strong>context</strong> (<em>dict</em>) – See <a class="reference external" href="http://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html#python-context-object-methods">Context Object</a></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="awslambdahelper.AWSConfigRule.lambda_handler">
+<code class="descname">lambda_handler</code><span class="sig-paren">(</span><em>event</em>, <em>context</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#AWSConfigRule.lambda_handler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.AWSConfigRule.lambda_handler" title="Permalink to this definition">¶</a></dt>
+<dd><div class="deprecated">
+<p><span class="versionmodified">Deprecated since version 1.1.4: </span>Use <a class="reference internal" href="internal.html#awslambdahelper.AWSConfigRule.handler" title="awslambdahelper.AWSConfigRule.handler"><code class="xref py py-meth docutils literal"><span class="pre">handler()</span></code></a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="evaluations">
+<h2>4.2. Evaluations<a class="headerlink" href="#evaluations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="compliantevaluation">
+<h3>4.2.1. CompliantEvaluation<a class="headerlink" href="#compliantevaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="awslambdahelper.CompliantEvaluation">
+<em class="property">class </em><code class="descclassname">awslambdahelper.</code><code class="descname">CompliantEvaluation</code><span class="sig-paren">(</span><em>Annotation=’This resource is compliant with the rule.’</em>, <em>ResourceType=None</em>, <em>ResourceId=None</em>, <em>OrderingTimestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#CompliantEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.CompliantEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>A rule is compliant if all of the resources that the rule evaluates comply with it,</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Annotation</strong> (<em>str</em>) – An explanation to attach to the evaluation result. Shown in the AWS Config Console.</li>
+<li><strong>ResourceType</strong> (<em>str</em>) – <p>A list of AWS resources which this rule evaluates. See <a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types">Evaluating Additional Resource Types</a>,
+and
+<a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources">Supported AWS Resource Types</a>.</p>
+</li>
+<li><strong>ResourceId</strong> – The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</li>
+<li><strong>OrderingTimestamp</strong> – The time of the event in AWS Config that triggered the evaluation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="noncompliantevaluation">
+<h3>4.2.2. NonCompliantEvaluation<a class="headerlink" href="#noncompliantevaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="awslambdahelper.NonCompliantEvaluation">
+<em class="property">class </em><code class="descclassname">awslambdahelper.</code><code class="descname">NonCompliantEvaluation</code><span class="sig-paren">(</span><em>Annotation</em>, <em>ResourceType=None</em>, <em>ResourceId=None</em>, <em>OrderingTimestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#NonCompliantEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.NonCompliantEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>A rule is noncompliant if any of these resources do not comply.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Annotation</strong> (<em>str</em>) – An explanation to attach to the evaluation result. Shown in the AWS Config Console.</li>
+<li><strong>ResourceType</strong> (<em>str</em>) – <p>A list of AWS resources which this rule evaluates. See <a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types">Evaluating Additional Resource Types</a>,
+and
+<a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources">Supported AWS Resource Types</a>.</p>
+</li>
+<li><strong>ResourceId</strong> – The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</li>
+<li><strong>OrderingTimestamp</strong> – The time of the event in AWS Config that triggered the evaluation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="notapplicableevaluation">
+<h3>4.2.3. NotApplicableEvaluation<a class="headerlink" href="#notapplicableevaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="awslambdahelper.NotApplicableEvaluation">
+<em class="property">class </em><code class="descclassname">awslambdahelper.</code><code class="descname">NotApplicableEvaluation</code><span class="sig-paren">(</span><em>ResourceType</em>, <em>ResourceId=None</em>, <em>OrderingTimestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#NotApplicableEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.NotApplicableEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>This resource is not applicable for this rule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ResourceType</strong> (<em>str</em>) – <p>A list of AWS resources which this rule evaluates. See <a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types">Evaluating Additional Resource Types</a>,
+and
+<a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources">Supported AWS Resource Types</a>.</p>
+</li>
+<li><strong>ResourceId</strong> – The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</li>
+<li><strong>OrderingTimestamp</strong> – The time of the event in AWS Config that triggered the evaluation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="insufficientdataevaluation">
+<h3>4.2.4. InsufficientDataEvaluation<a class="headerlink" href="#insufficientdataevaluation" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="awslambdahelper.InsufficientDataEvaluation">
+<em class="property">class </em><code class="descclassname">awslambdahelper.</code><code class="descname">InsufficientDataEvaluation</code><span class="sig-paren">(</span><em>Annotation</em>, <em>ResourceType=None</em>, <em>ResourceId=None</em>, <em>OrderingTimestamp=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/awslambdahelper.html#InsufficientDataEvaluation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#awslambdahelper.InsufficientDataEvaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>AWS Config returns the INSUFFICIENT_DATA value when no evaluation results are available for the AWS resource or
+Config rule.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>Annotation</strong> (<em>str</em>) – An explanation to attach to the evaluation result. Shown in the AWS Config Console.</li>
+<li><strong>ResourceType</strong> (<em>str</em>) – <p>A list of AWS resources which this rule evaluates. See <a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types">Evaluating Additional Resource Types</a>,
+and
+<a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources">Supported AWS Resource Types</a>.</p>
+</li>
+<li><strong>ResourceId</strong> (<em>str</em>) – The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</li>
+<li><strong>OrderingTimestamp</strong> – The time of the event in AWS Config that triggered the evaluation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="internal.html" class="btn btn-neutral float-right" title="5. Private Class and Function Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="userguide.html" class="btn btn-neutral" title="1. Developer Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Drew J. Sonne. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1.10',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

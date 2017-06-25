@@ -1,0 +1,306 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>awslambdahelper 1.1.10 &mdash; awslambdahelper 1.1.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="awslambdahelper 1.1.10 documentation" href="#"/>
+        <link rel="next" title="1. Developer Guide" href="userguide.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> awslambdahelper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">1. Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#configuration-change-rule">2. Configuration Change Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#scheduled-rule">3. Scheduled Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">4. API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internal.html">5. Private Class and Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">6. What’s new in awslambdahelper |package_version|</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">awslambdahelper</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>awslambdahelper 1.1.10</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="awslambdahelper-1-1-10">
+<h1>awslambdahelper 1.1.10<a class="headerlink" href="#awslambdahelper-1-1-10" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://www.quantifiedcode.com/app/project/bb53f496a1cc45f780342fc973270298"><img alt="Code issues" src="https://www.quantifiedcode.com/api/v1/project/bb53f496a1cc45f780342fc973270298/badge.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/github/drewsonne/awslambdahelper?branch=master"><img alt="https://codecov.io/github/drewsonne/awslambdahelper/coverage.svg?branch=master" src="https://codecov.io/github/drewsonne/awslambdahelper/coverage.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://travis-ci.org/drewsonne/awslambdahelper"><img alt="https://travis-ci.org/drewsonne/awslambdahelper.svg?branch=master" src="https://travis-ci.org/drewsonne/awslambdahelper.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/awslambdahelper"><img alt="https://img.shields.io/pypi/v/awslambdahelper.svg" src="https://img.shields.io/pypi/v/awslambdahelper.svg" /></a>
+<p>Abstracts the more mundane aspects of lambda resources</p>
+<p>A lot of boilerplate code is required to implemented lambda’s for AWS
+Config and custom Cloudformation resources. We can abstract this away
+and wrap our rule in data structures to improve development and
+encourage a particular structure.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>$ pip install awslambdahelper
+</pre></div>
+</div>
+</div>
+<div class="section" id="quickstart">
+<h2>QuickStart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-a-python-class">
+<h3>Create a Python class<a class="headerlink" href="#create-a-python-class" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># my_lambda_code.py</span>
+<span class="kn">from</span> <span class="nn">awslambdahelper</span> <span class="kn">import</span> <span class="n">AWSConfigRule</span>
+
+<span class="k">class</span> <span class="nc">MyConfigRule</span><span class="p">(</span><span class="n">AWSConfigRule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find_violation_config_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">rule_parameters</span><span class="p">):</span>
+      <span class="k">return</span> <span class="p">[</span><span class="n">NonCompliantEvaluation</span><span class="p">(</span>
+        <span class="n">Annotation</span><span class="o">=</span><span class="s2">&quot;This failed because it is only a demo.&quot;</span>
+      <span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-aws-lambda-handler">
+<h3>Setup AWS Lambda handler<a class="headerlink" href="#setup-aws-lambda-handler" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">boto3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;lambda&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">create_function</span><span class="p">(</span>
+<span class="go">  Handler = &quot;my_lambda_code.MyConfigRule.handler&#39;</span>
+<span class="go">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-aws-config-rule">
+<h3>Create AWS Config Rule<a class="headerlink" href="#create-aws-config-rule" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_getting-started.html">Getting Started with Custom Rules</a>.</p>
+<p>That’s it! For a more indepth guide, <a class="reference external" href="http://awslambdahelper.readthedocs.io/en/latest/">read the docs</a>.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html">1. Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#aws-config-rule">1.1. AWS Config Rule</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#configuration-change-rule">2. Configuration Change Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="userguide.html#scheduled-rule">3. Scheduled Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">4. API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#rules">4.1. Rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#evaluations">4.2. Evaluations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internal.html">5. Private Class and Function Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internal.html#lambdahelper-bunder-cli-tool">5.1. <cite>lambdahelper-bunder</cite> cli tool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internal.html#aws-config-resources">5.2. AWS Config resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changes.html">6. What’s new in awslambdahelper |package_version|</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changes.html#release-1-1-10">6.1. Release: 1.1.10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changes.html#release-1-1-6">6.2. Release: 1.1.6</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="userguide.html" class="btn btn-neutral float-right" title="1. Developer Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Drew J. Sonne. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1.10',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

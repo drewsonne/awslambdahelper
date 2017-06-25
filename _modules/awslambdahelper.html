@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>awslambdahelper &mdash; awslambdahelper 1.1.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="awslambdahelper 1.1.10 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> awslambdahelper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../userguide.html">1. Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userguide.html#configuration-change-rule">2. Configuration Change Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../userguide.html#scheduled-rule">3. Scheduled Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">4. API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internal.html">5. Private Class and Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">6. What’s new in awslambdahelper |package_version|</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">awslambdahelper</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>awslambdahelper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for awslambdahelper</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">boto3</span>
+
+<span class="kn">from</span> <span class="nn">awslambdahelper.evaluation</span> <span class="k">import</span> <span class="n">AWSConfigEvaluation</span>
+
+
+<div class="viewcode-block" id="AWSConfigRule"><a class="viewcode-back" href="../internal.html#awslambdahelper.AWSConfigRule">[docs]</a><span class="k">class</span> <span class="nc">AWSConfigRule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the business logic for processing either scheduled or config change AWS Config rules</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#: Specifies an AWS Config Rule which is triggered by a resource configuration</span>
+    <span class="n">CALL_TYPE_CONFIGURATION_CHANGE</span> <span class="o">=</span> <span class="s1">&#39;ConfigurationItemChangeNotification&#39;</span>
+    <span class="c1">#: Specifies an AWS Config Rule which is triggered on a scheduled basis</span>
+    <span class="n">CALL_TYPE_SCHEDULED</span> <span class="o">=</span> <span class="s1">&#39;ScheduledNotification&#39;</span>
+    <span class="c1">#: List of resources which this rule can evaluate. Only application for ConfigurationChange rules.</span>
+    <span class="n">APPLICABLE_RESOURCES</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="AWSConfigRule.handler"><a class="viewcode-back" href="../internal.html#awslambdahelper.AWSConfigRule.handler">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allow a single entrypoint without extra boilerplate code.</span>
+
+<span class="sd">        &gt;&gt;&gt; from awslambdahelper import AWSConfigRule,InsufficientDataEvaluation</span>
+<span class="sd">        &gt;&gt;&gt; class MyAwesomeRule(AWSConfigRule):</span>
+<span class="sd">        ...     APPLICABLE_RESOURCES = [&quot;AWS::EC2::Instance&quot;]</span>
+<span class="sd">        ...     def find_violation_config_change(self, rule_parameters, config):</span>
+<span class="sd">        ...         return [InsufficientDataEvaluation()]</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; # The entrypoint for lambda would be set as &quot;file_name.MyAwesomeRule.handler&quot;</span>
+
+<span class="sd">        :param event: See `Event Attributes</span>
+<span class="sd">            &lt;http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html#w2ab1c13c33c27c15c15&gt;`_</span>
+<span class="sd">            in the AWS Config Developer guide.</span>
+<span class="sd">        :type event: dict</span>
+<span class="sd">        :param context: See `Context Object &lt;http://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html#python-context-object-methods&gt;`_</span>
+<span class="sd">        :type context: dict</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rule</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">APPLICABLE_RESOURCES</span><span class="p">)</span>
+        <span class="n">rule</span><span class="o">.</span><span class="n">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">applicable_resources</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If this rule is for handling ConfigurationChange events, then the &quot;Applicable Resources&quot; attribute must be set.</span>
+<span class="sd">        If this is for handling Scheduled events, then no item is required.</span>
+
+<span class="sd">        :param applicable_resources: A list of AWS resources which this rule evaluates. Only applicable for</span>
+<span class="sd">            Configuration Change rules, and not Scheduled rules. See `Evaluating Additional Resource Types</span>
+<span class="sd">            &lt;http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types&gt;`_,</span>
+<span class="sd">            and</span>
+<span class="sd">            `Supported AWS Resource Types &lt;http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources&gt;`_.</span>
+<span class="sd">        :type applicable_resources: Union[List,Tuple]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">applicable_resources</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applicable_resources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">APPLICABLE_RESOURCES</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applicable_resources</span> <span class="o">=</span> <span class="n">applicable_resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_type</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_config_change_call</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CALL_TYPE_CONFIGURATION_CHANGE</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_scheduled_call</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">CALL_TYPE_SCHEDULED</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">put_evaluations</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">put_evaluations</span><span class="p">(</span>
+            <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="AWSConfigRule.lambda_handler"><a class="viewcode-back" href="../internal.html#awslambdahelper.AWSConfigRule.lambda_handler">[docs]</a>    <span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. deprecated:: 1.1.4</span>
+<span class="sd">            Use :py:meth:`~awslambdahelper.AWSConfigRule.handler`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">invoking_event</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;invokingEvent&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;ruleParameters&#39;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="n">rule_parameters</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;ruleParameters&quot;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rule_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_type</span> <span class="o">=</span> <span class="n">invoking_event</span><span class="p">[</span><span class="s1">&#39;messageType&#39;</span><span class="p">]</span>
+
+        <span class="n">result_token</span> <span class="o">=</span> <span class="s2">&quot;No token found.&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;resultToken&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+            <span class="n">result_token</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;resultToken&quot;</span><span class="p">]</span>
+
+        <span class="n">evaluations</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_config_change_call</span><span class="p">:</span>
+
+            <span class="n">configuration_item</span> <span class="o">=</span> <span class="n">invoking_event</span><span class="p">[</span><span class="s2">&quot;configurationItem&quot;</span><span class="p">]</span>
+            <span class="n">evaluation_responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_compliance</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">configuration_item</span><span class="p">,</span>
+                <span class="n">rule_parameters</span><span class="o">=</span><span class="n">rule_parameters</span><span class="p">,</span>
+                <span class="n">event</span><span class="o">=</span><span class="n">event</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">evaluation_response</span> <span class="ow">in</span> <span class="n">evaluation_responses</span><span class="p">:</span>
+                <span class="n">evaluation</span> <span class="o">=</span> <span class="n">evaluation_response</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+                    <span class="n">ResourceType</span><span class="o">=</span><span class="n">configuration_item</span><span class="p">[</span><span class="s2">&quot;resourceType&quot;</span><span class="p">],</span>
+                    <span class="n">ResourceId</span><span class="o">=</span><span class="n">configuration_item</span><span class="p">[</span><span class="s2">&quot;resourceId&quot;</span><span class="p">],</span>
+                    <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="n">configuration_item</span><span class="p">[</span><span class="s2">&quot;configurationItemCaptureTime&quot;</span><span class="p">]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+                <span class="n">evaluations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluation</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">evaluation_responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_compliance</span><span class="p">(</span>
+                <span class="n">rule_parameters</span><span class="o">=</span><span class="n">rule_parameters</span><span class="p">,</span>
+                <span class="n">event</span><span class="o">=</span><span class="n">event</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">evaluation_response</span> <span class="ow">in</span> <span class="n">evaluation_responses</span><span class="p">:</span>
+                <span class="n">evaluations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evaluation_response</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+                    <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="n">invoking_event</span><span class="p">[</span><span class="s2">&quot;notificationCreationTime&quot;</span><span class="p">]</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="k">for</span> <span class="n">evaluation_chunk</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">evaluations</span><span class="p">),</span> <span class="n">chunk_size</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">put_evaluations</span><span class="p">(</span>
+                <span class="n">Evaluations</span><span class="o">=</span><span class="n">evaluations</span><span class="p">[</span><span class="n">evaluation_chunk</span><span class="p">:</span><span class="n">evaluation_chunk</span> <span class="o">+</span> <span class="n">chunk_size</span><span class="p">],</span>
+                <span class="n">ResultToken</span><span class="o">=</span><span class="n">result_token</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AWSConfigRule.evaluate_compliance"><a class="viewcode-back" href="../internal.html#awslambdahelper.AWSConfigRule.evaluate_compliance">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_compliance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_parameters</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A facade to delegate the event to either the :py:meth:`~awslambdahelper.AWSConfigRule.find_violation_config_change`, or</span>
+<span class="sd">        :py:meth:`~awslambdahelper.AWSConfigRule.find_violation_scheduled`.</span>
+
+<span class="sd">        :param rule_parameters: A list of key/pairs which are to be provided to the rule.</span>
+<span class="sd">        :type: dict</span>
+<span class="sd">        :param event:</span>
+<span class="sd">        :param config:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_config_change_call</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;resourceType&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">applicable_resources</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">NotApplicableEvaluation</span><span class="p">(</span>
+                    <span class="n">ResourceType</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;resourceType&quot;</span><span class="p">],</span>
+                <span class="p">)]</span>
+
+            <span class="n">violations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_violation_config_change</span><span class="p">(</span>
+                <span class="n">rule_parameters</span><span class="o">=</span><span class="n">rule_parameters</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">config</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">violations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_violation_scheduled</span><span class="p">(</span>
+                <span class="n">rule_parameters</span><span class="o">=</span><span class="n">rule_parameters</span><span class="p">,</span>
+                <span class="n">accountid</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;accountId&#39;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">violations</span></div>
+
+<div class="viewcode-block" id="AWSConfigRule.find_violation_config_change"><a class="viewcode-back" href="../internal.html#awslambdahelper.AWSConfigRule.find_violation_config_change">[docs]</a>    <span class="k">def</span> <span class="nf">find_violation_config_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_parameters</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Place holder function for configuration change rules. Needs to be overriden by super class.</span>
+
+<span class="sd">        :raises: NotImplementedError</span>
+<span class="sd">        :param rule_parameters:</span>
+<span class="sd">        :param config:</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;:find_violation_config_change() is not implemented.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AWSConfigRule.find_violation_scheduled"><a class="viewcode-back" href="../internal.html#awslambdahelper.AWSConfigRule.find_violation_scheduled">[docs]</a>    <span class="k">def</span> <span class="nf">find_violation_scheduled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rule_parameters</span><span class="p">,</span> <span class="n">accountid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Place holder function for configuration change rules. Needs to be overriden by super class.</span>
+
+<span class="sd">        :param rule_parameters:</span>
+<span class="sd">        :param accountid:</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;:find_violation_scheduled() is not implemented.&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="CompliantEvaluation"><a class="viewcode-back" href="../internal.html#awslambdahelper.CompliantEvaluation">[docs]</a><span class="k">class</span> <span class="nc">CompliantEvaluation</span><span class="p">(</span><span class="n">AWSConfigEvaluation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A rule is compliant if all of the resources that the rule evaluates comply with it,</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Annotation</span><span class="o">=</span><span class="s2">&quot;This resource is compliant with the rule.&quot;</span><span class="p">,</span> <span class="n">ResourceType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ResourceId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.</span>
+<span class="sd">        :type Annotation: str</span>
+<span class="sd">        :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types</span>
+<span class="sd">            &lt;http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types&gt;`_,</span>
+<span class="sd">            and</span>
+<span class="sd">            `Supported AWS Resource Types &lt;http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources&gt;`_.</span>
+<span class="sd">        :type ResourceType: str</span>
+<span class="sd">        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</span>
+<span class="sd">        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CompliantEvaluation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">AWSConfigEvaluation</span><span class="o">.</span><span class="n">TYPE_COMPLIANT</span><span class="p">,</span>
+            <span class="n">Annotation</span><span class="p">,</span>
+            <span class="n">ResourceType</span><span class="o">=</span><span class="n">ResourceType</span><span class="p">,</span>
+            <span class="n">ResourceId</span><span class="o">=</span><span class="n">ResourceId</span><span class="p">,</span>
+            <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="n">OrderingTimestamp</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NonCompliantEvaluation"><a class="viewcode-back" href="../internal.html#awslambdahelper.NonCompliantEvaluation">[docs]</a><span class="k">class</span> <span class="nc">NonCompliantEvaluation</span><span class="p">(</span><span class="n">AWSConfigEvaluation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A rule is noncompliant if any of these resources do not comply.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">ResourceType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ResourceId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.</span>
+<span class="sd">        :type Annotation: str</span>
+<span class="sd">        :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types</span>
+<span class="sd">            &lt;http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types&gt;`_,</span>
+<span class="sd">            and</span>
+<span class="sd">            `Supported AWS Resource Types &lt;http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources&gt;`_.</span>
+<span class="sd">        :type ResourceType: str</span>
+<span class="sd">        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</span>
+<span class="sd">        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NonCompliantEvaluation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">AWSConfigEvaluation</span><span class="o">.</span><span class="n">TYPE_NON_COMPLIANT</span><span class="p">,</span>
+            <span class="n">Annotation</span><span class="p">,</span>
+            <span class="n">ResourceType</span><span class="o">=</span><span class="n">ResourceType</span><span class="p">,</span>
+            <span class="n">ResourceId</span><span class="o">=</span><span class="n">ResourceId</span><span class="p">,</span>
+            <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="n">OrderingTimestamp</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NotApplicableEvaluation"><a class="viewcode-back" href="../internal.html#awslambdahelper.NotApplicableEvaluation">[docs]</a><span class="k">class</span> <span class="nc">NotApplicableEvaluation</span><span class="p">(</span><span class="n">AWSConfigEvaluation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This resource is not applicable for this rule.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ResourceType</span><span class="p">,</span> <span class="n">ResourceId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types</span>
+<span class="sd">            &lt;http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types&gt;`_,</span>
+<span class="sd">            and</span>
+<span class="sd">            `Supported AWS Resource Types &lt;http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources&gt;`_.</span>
+<span class="sd">        :type ResourceType: str</span>
+<span class="sd">        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</span>
+<span class="sd">        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NotApplicableEvaluation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">AWSConfigEvaluation</span><span class="o">.</span><span class="n">TYPE_NOT_APPLICABLE</span><span class="p">,</span>
+            <span class="s2">&quot;The rule doesn&#39;t apply to resources of type &quot;</span> <span class="o">+</span> <span class="n">ResourceType</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+            <span class="n">ResourceType</span><span class="o">=</span><span class="n">ResourceType</span><span class="p">,</span>
+            <span class="n">ResourceId</span><span class="o">=</span><span class="n">ResourceId</span><span class="p">,</span>
+            <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="n">OrderingTimestamp</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InsufficientDataEvaluation"><a class="viewcode-back" href="../internal.html#awslambdahelper.InsufficientDataEvaluation">[docs]</a><span class="k">class</span> <span class="nc">InsufficientDataEvaluation</span><span class="p">(</span><span class="n">AWSConfigEvaluation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    AWS Config returns the INSUFFICIENT_DATA value when no evaluation results are available for the AWS resource or</span>
+<span class="sd">    Config rule.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">ResourceType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ResourceId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.</span>
+<span class="sd">        :type Annotation: str</span>
+<span class="sd">        :param ResourceType:  A list of AWS resources which this rule evaluates. See `Evaluating Additional Resource Types</span>
+<span class="sd">            &lt;http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_nodejs.html#creating-custom-rules-for-additional-resource-types&gt;`_,</span>
+<span class="sd">            and</span>
+<span class="sd">            `Supported AWS Resource Types &lt;http://docs.aws.amazon.com/config/latest/developerguide/resource-config-reference.html#supported-resources&gt;`_.</span>
+<span class="sd">        :type ResourceType: str</span>
+<span class="sd">        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</span>
+<span class="sd">        :type ResourceId: str</span>
+<span class="sd">        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InsufficientDataEvaluation</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">AWSConfigEvaluation</span><span class="o">.</span><span class="n">TYPE_INSUFFICIENT_DATA</span><span class="p">,</span>
+            <span class="n">Annotation</span><span class="p">,</span>
+            <span class="n">ResourceType</span><span class="o">=</span><span class="n">ResourceType</span><span class="p">,</span>
+            <span class="n">ResourceId</span><span class="o">=</span><span class="n">ResourceId</span><span class="p">,</span>
+            <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="n">OrderingTimestamp</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Drew J. Sonne. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.1.10',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

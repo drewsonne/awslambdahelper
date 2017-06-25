@@ -1,0 +1,494 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>awslambdahelper.cli &mdash; awslambdahelper 1.1.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="awslambdahelper 1.1.10 documentation" href="../../index.html"/>
+        <link rel="up" title="awslambdahelper" href="../awslambdahelper.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> awslambdahelper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html">1. Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html#configuration-change-rule">2. Configuration Change Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html#scheduled-rule">3. Scheduled Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">4. API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internal.html">5. Private Class and Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">6. What’s new in awslambdahelper |package_version|</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">awslambdahelper</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../awslambdahelper.html">awslambdahelper</a> &raquo;</li>
+        
+      <li>awslambdahelper.cli</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for awslambdahelper.cli</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">ConfigParser</span>
+<span class="kn">import</span> <span class="nn">zipfile</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">pip</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="k">import</span> <span class="n">ZipFile</span>
+
+
+<div class="viewcode-block" id="BundlerArgumentParser"><a class="viewcode-back" href="../../internal.html#awslambdahelper.cli.BundlerArgumentParser">[docs]</a><span class="k">class</span> <span class="nc">BundlerArgumentParser</span><span class="p">(</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses command line arguments, and validates the integrity of the file paths and directories provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the cli argument schema</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BundlerArgumentParser</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--directory&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the directory to bundle for AWS lambda.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--requirements_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;requirements.txt&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the requirements file in the target directory&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BundlerArgumentParser._parse_known_args"><a class="viewcode-back" href="../../internal.html#awslambdahelper.cli.BundlerArgumentParser._parse_known_args">[docs]</a>    <span class="k">def</span> <span class="nf">_parse_known_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg_strings</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse as the parent does, and then optionally raise an ArgumentException is :code:`--send-to-cfn` is missing</span>
+<span class="sd">        :code:`--owner`.</span>
+
+<span class="sd">        :param arg_strings: List of cli argument strings passed to the arg parser.</span>
+<span class="sd">        :type arg_strings: list</span>
+<span class="sd">        :param namespace: Namespace object, created by super :py:class:`argparse.ArgumentParser` namespace object.</span>
+<span class="sd">        :type namespace: argparse.Namespace</span>
+<span class="sd">        :returns:</span>
+
+<span class="sd">                namespace(*argparse.Namespace*)</span>
+<span class="sd">                    is the super :py:class:`argparse.ArgumentParser` namespace object, with the with the addition of the</span>
+<span class="sd">                    arguments parse in this class.</span>
+
+<span class="sd">                unparsed_args(*list[str]*)</span>
+<span class="sd">                    are args which were not parsed by this ArgumentParser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">namespace</span><span class="p">,</span> <span class="n">unparsed_args</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">BundlerArgumentParser</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_parse_known_args</span><span class="p">(</span><span class="n">arg_strings</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+        <span class="n">namespace</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_full_path</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">namespace</span><span class="o">.</span><span class="n">requirements_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span> <span class="n">namespace</span><span class="o">.</span><span class="n">requirements_name</span><span class="p">)</span>
+
+        <span class="n">directory_missing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_missing_directory</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">not_a_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_not_a_directory</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">directory</span><span class="p">)</span>
+        <span class="n">missing_requirements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_test_missing_requirements</span><span class="p">(</span><span class="n">namespace</span><span class="o">.</span><span class="n">requirements_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">directory_missing</span> <span class="ow">or</span> <span class="n">not_a_directory</span><span class="p">:</span>
+            <span class="n">directory_action</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">action</span><span class="p">:</span> <span class="s1">&#39;--directory&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentError</span><span class="p">(</span><span class="n">directory_action</span><span class="p">,</span> <span class="n">directory_missing</span> <span class="ow">or</span> <span class="n">not_a_directory</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">missing_requirements</span><span class="p">:</span>
+            <span class="n">requirement_action</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">action</span><span class="p">:</span> <span class="s1">&#39;--requirements_name&#39;</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">option_strings</span><span class="p">,</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">_actions</span><span class="p">)</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentError</span><span class="p">(</span><span class="n">requirement_action</span><span class="p">,</span> <span class="n">missing_requirements</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">unparsed_args</span></div>
+
+<div class="viewcode-block" id="BundlerArgumentParser._test_missing_directory"><a class="viewcode-back" href="../../internal.html#awslambdahelper.cli.BundlerArgumentParser._test_missing_directory">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_test_missing_directory</span><span class="p">(</span><span class="n">target_directory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the specified directory is missing, return an error message</span>
+
+<span class="sd">        :param target_directory: Fully qualified path to test</span>
+<span class="sd">        :type target_directory: str</span>
+<span class="sd">        :return: An error message, or False if the requirements file exists.</span>
+<span class="sd">        :rtype: Union[str,bool]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">target_directory</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;Could not find `--directory=</span><span class="si">{dir}</span><span class="s2">`.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">target_directory</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BundlerArgumentParser._test_not_a_directory"><a class="viewcode-back" href="../../internal.html#awslambdahelper.cli.BundlerArgumentParser._test_not_a_directory">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_test_not_a_directory</span><span class="p">(</span><span class="n">target_directory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the specified path is not a directory, return an error message</span>
+
+<span class="sd">        :param target_directory: Fully qualified path to test</span>
+<span class="sd">        :type target_directory: str</span>
+<span class="sd">        :return: An error message, or False if the requirements file exists.</span>
+<span class="sd">        :rtype: Union[str,bool]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">target_directory</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;`--directory=</span><span class="si">{dir}</span><span class="s2">` is not a directory.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">target_directory</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BundlerArgumentParser._test_missing_requirements"><a class="viewcode-back" href="../../internal.html#awslambdahelper.cli.BundlerArgumentParser._test_missing_requirements">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_test_missing_requirements</span><span class="p">(</span><span class="n">requirements_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the requirements path does not exist, return an error method</span>
+
+<span class="sd">        :param requirements_path: Fully qualified path to test.</span>
+<span class="sd">        :type requirements_path: str</span>
+<span class="sd">        :return: An error message, or False if the requirements file exists.</span>
+<span class="sd">        :rtype: Union[str,bool]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">requirements_path</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;Could not find requirements file at `</span><span class="si">{path}</span><span class="s2">`.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">requirements_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BundlerArgumentParser._full_path"><a class="viewcode-back" href="../../internal.html#awslambdahelper.cli.BundlerArgumentParser._full_path">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_full_path</span><span class="p">(</span><span class="n">dir_</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Expand any &#39;~&#39;, &#39;../&#39;, or &#39;./&#39; in the dir\_ path.</span>
+
+<span class="sd">        :param dir_: A relative, home relative, or absolute path.</span>
+<span class="sd">        :return: Fully Qualified path</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dir_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;~&#39;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_</span><span class="p">):</span>
+            <span class="n">dir_</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">dir_</span><span class="p">)</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">LambdahelperBundler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handler for the cli tool to archive code up for Lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Entrypoint for our bundler cli tool</span>
+
+<span class="sd">        :param args: defaults to :py:data:`sys.argv[1:]`</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_directory</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">requirements_path</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_lambda_package_files</span><span class="p">()</span>
+
+        <span class="n">SetupCfgFile</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_directory</span><span class="p">,</span> <span class="s1">&#39;setup.cfg&#39;</span><span class="p">),</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span> <span class="s1">&#39;setup.cfg&#39;</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+
+        <span class="n">pip</span><span class="o">.</span><span class="n">main</span><span class="p">([</span>
+            <span class="s2">&quot;install&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span>
+            <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirements_path</span>
+        <span class="p">])</span>
+
+        <span class="n">DirectoryZipFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">)</span><span class="o">.</span><span class="n">create_archive</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">copy_lambda_package_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Copy lambda files to working directory.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_directory</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="s2">&quot;*.py&quot;</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">)</span>
+
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">requirements_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse the args</span>
+<span class="sd">        :param args:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cli_args</span> <span class="o">=</span> <span class="n">BundlerArgumentParser</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">cli_args</span><span class="o">.</span><span class="n">directory</span><span class="p">,</span>
+            <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(),</span>
+            <span class="n">cli_args</span><span class="o">.</span><span class="n">requirements_path</span>
+        <span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">SetupCfgFile</span><span class="p">(</span><span class="n">ConfigParser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make sure we have a setup.cfg file with an empty install.prefix for uploading to lambda.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setup_cfg</span><span class="p">,</span> <span class="n">temp_setup_cfg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param setup_cfg: Location of expected path to existing setpu.cfg</span>
+<span class="sd">        :type setup_cfg: str</span>
+<span class="sd">        :param temp_setup_cfg: Location of temporary setup.cfg file for use during packaging</span>
+<span class="sd">        :type temp_setup_cfg: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SetupCfgFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_cfg</span> <span class="o">=</span> <span class="n">setup_cfg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temp_setup_cfg</span> <span class="o">=</span> <span class="n">temp_setup_cfg</span>
+
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the existing setup.cfg exists, load it.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        :rtype: awslmabdahelper.cli.SetupCfgFile</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setup_cfg</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">setup_cfg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make sure we have an &#39;install&#39; section, and that the &#39;prefix&#39; is set to &#39;&#39;.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s1">&#39;install&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;install&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;install&#39;</span><span class="p">,</span> <span class="s1">&#39;prefix&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">temp_setup_cfg</span><span class="p">)</span> <span class="k">as</span> <span class="n">cfg</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">SetupCfgFile</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">DirectoryZipFile</span><span class="p">(</span><span class="n">ZipFile</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the zipping of an entire directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">zip_destination</span> <span class="o">=</span> <span class="n">target</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.zip&#39;</span>
+
+        <span class="n">ZipFile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zip_destination</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_DEFLATED</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source_path</span> <span class="o">=</span> <span class="n">target</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archive_path</span> <span class="o">=</span> <span class="n">zip_destination</span>
+
+    <span class="k">def</span> <span class="nf">create_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given a target_directory to compress, and a working_directory to place the files in, compress them</span>
+<span class="sd">        in a zip archive.</span>
+
+<span class="sd">        :param target_directory:</span>
+<span class="sd">        :param working_directory:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zipdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">source_path</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">zipdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">zip_path_prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively walk our directory path, and add files to the zip archive.</span>
+
+<span class="sd">        :param path: Path to walk which contains our files to be added to the zip archive.</span>
+<span class="sd">        :param ziph: zipfile handler</span>
+<span class="sd">        :type ziph: zipfile.ZipFile</span>
+<span class="sd">        :param zip_path_prefix:</span>
+<span class="sd">        :type basestring</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ziph is zipfile handle</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="n">source_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+                <span class="n">archive_file</span> <span class="o">=</span> <span class="n">source_file</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">zip_path_prefix</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="nb">print</span> <span class="s2">&quot;    Adding file: &#39;&quot;</span> <span class="o">+</span> <span class="n">archive_file</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span> <span class="n">archive_file</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">LambdahelperBundler</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Drew J. Sonne. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.10',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

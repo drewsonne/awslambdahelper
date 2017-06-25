@@ -1,0 +1,321 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>awslambdahelper.evaluation &mdash; awslambdahelper 1.1.10 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="awslambdahelper 1.1.10 documentation" href="../../index.html"/>
+        <link rel="up" title="awslambdahelper" href="../awslambdahelper.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> awslambdahelper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html">1. Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html#configuration-change-rule">2. Configuration Change Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../userguide.html#scheduled-rule">3. Scheduled Rule</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">4. API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internal.html">5. Private Class and Function Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changes.html">6. What’s new in awslambdahelper |package_version|</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">awslambdahelper</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../awslambdahelper.html">awslambdahelper</a> &raquo;</li>
+        
+      <li>awslambdahelper.evaluation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for awslambdahelper.evaluation</h1><div class="highlight"><pre>
+<span></span><span class="c1"># coding=utf-8</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">See http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html \</span>
+<span class="sd">#config-Type-Evaluation-ComplianceResourceType</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+
+<div class="viewcode-block" id="AWSConfigEvaluation"><a class="viewcode-back" href="../../internal.html#awslambdahelper.evaluation.AWSConfigEvaluation">[docs]</a><span class="k">class</span> <span class="nc">AWSConfigEvaluation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Represents a response payload to an evaluation event</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#: Define an evaluation of a resource as compliant to a rule. See `Evaluation.ComplianceType &lt;http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType&gt;`_. # noqa</span>
+    <span class="n">TYPE_COMPLIANT</span> <span class="o">=</span> <span class="s1">&#39;COMPLIANT&#39;</span>
+    <span class="c1">#: Define an evaluation of a resource as not being compliant to a rule. See `Evaluation.ComplianceType &lt;http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType&gt;`_. # noqa</span>
+    <span class="n">TYPE_NON_COMPLIANT</span> <span class="o">=</span> <span class="s1">&#39;NON_COMPLIANT&#39;</span>
+    <span class="c1">#: Define a rule as not being applicable to a specific resource. See `Evaluation.ComplianceType &lt;http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType&gt;`_. # noqa</span>
+    <span class="n">TYPE_NOT_APPLICABLE</span> <span class="o">=</span> <span class="s1">&#39;NOT_APPLICABLE&#39;</span>
+    <span class="c1">#: Define a rule as not having enough insufficient data for evaluate a resource. See `Evaluation.ComplianceType &lt;http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html#config-Type-Evaluation-ComplianceType&gt;`_. # noqa</span>
+    <span class="n">TYPE_INSUFFICIENT_DATA</span> <span class="o">=</span> <span class="s1">&#39;INSUFFICIENT_DATA&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Annotation</span><span class="p">,</span> <span class="n">ResourceType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ResourceId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param Type: One of :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_COMPLIANT`,</span>
+<span class="sd">            :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_NON_COMPLIANT`,</span>
+<span class="sd">            :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_NOT_APPLICABLE`, or</span>
+<span class="sd">            :py:attr:`~awslambdahelper.evaluation.AWSConfigEvaluation.TYPE_INSUFFICIENT_DATA`.</span>
+<span class="sd">        :param Annotation: An explanation to attach to the evaluation result. Shown in the AWS Config Console.</span>
+<span class="sd">        :type Annotation: str</span>
+<span class="sd">        :param ResourceType:</span>
+<span class="sd">        :type ResourceType: str</span>
+<span class="sd">        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</span>
+<span class="sd">        :type ResourceId: str</span>
+<span class="sd">        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">OrderingTimestamp</span> <span class="o">=</span> <span class="n">OrderingTimestamp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceResourceType</span> <span class="o">=</span> <span class="n">ResourceType</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceResourceId</span> <span class="o">=</span> <span class="n">ResourceId</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceType</span> <span class="o">=</span> <span class="n">Type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Annotation</span> <span class="o">=</span> <span class="n">Annotation</span>
+
+<div class="viewcode-block" id="AWSConfigEvaluation.set"><a class="viewcode-back" href="../../internal.html#awslambdahelper.evaluation.AWSConfigEvaluation.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ResourceType</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ResourceId</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">OrderingTimestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets variables for the evaluation, after creation.</span>
+<span class="sd">        See the</span>
+<span class="sd">        `Evaluation &lt;http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html&gt;`_ resource for details.</span>
+
+<span class="sd">        :param ResourceType:</span>
+<span class="sd">        :param ResourceId: The id (eg, id-000000) or the ARN (eg, arn:aws:iam:01234567890:eu-west-1:..) for the resource</span>
+<span class="sd">        :param OrderingTimestamp: The time of the event in AWS Config that triggered the evaluation.</span>
+<span class="sd">        :return: This evaluation object</span>
+<span class="sd">        :rtype: :py:class:`~awslambdahelper.evaluation.AWSConfigEvaluation`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">ResourceType</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceResourceType</span> <span class="o">=</span> <span class="n">ResourceType</span>
+
+        <span class="k">if</span> <span class="n">ResourceId</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceResourceId</span> <span class="o">=</span> <span class="n">ResourceId</span>
+
+        <span class="k">if</span> <span class="n">OrderingTimestamp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">OrderingTimestamp</span> <span class="o">=</span> <span class="n">OrderingTimestamp</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="AWSConfigEvaluation.to_dict"><a class="viewcode-back" href="../../internal.html#awslambdahelper.evaluation.AWSConfigEvaluation.to_dict">[docs]</a>    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert the AWSConfigEvaluation object to</span>
+<span class="sd">        an `Evaluation &lt;http://docs.aws.amazon.com/config/latest/APIReference/API_Evaluation.html&gt;`_ payload. If the</span>
+<span class="sd">        timestamp is not set, we create one.</span>
+
+<span class="sd">        :return: an AWS Config Evaluation resource</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;ComplianceType&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceType</span><span class="p">,</span>
+            <span class="s1">&#39;Annotation&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Annotation</span><span class="p">,</span>
+            <span class="s1">&#39;ComplianceResourceType&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceResourceType</span><span class="p">,</span>
+            <span class="s1">&#39;ComplianceResourceId&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ComplianceResourceId</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">OrderingTimestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;OrderingTimestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;Z&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response</span><span class="p">[</span><span class="s1">&#39;OrderingTimestamp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">OrderingTimestamp</span>
+
+        <span class="k">return</span> <span class="n">response</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Drew J. Sonne. All rights reserved.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.10',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
