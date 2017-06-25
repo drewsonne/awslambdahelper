@@ -1,6 +1,6 @@
 from pybuilder.core import use_plugin, init, Author
 
-_version = ('1','1','6')
+_version = ('1','1','7')
 
 use_plugin('exec')
 use_plugin("python.core")

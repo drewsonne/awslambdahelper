@@ -1,4 +1,16 @@
 --------------
+Release: 1.1.7
+--------------
+Date: 25 June 2017
+
+~~~~~~~~~~~~~~~~~~~
+Changes since 1.1.6
+~~~~~~~~~~~~~~~~~~~
+
+ - Expanded test coverage
+ - Expanded the documentation
+
+--------------
 Release: 1.1.6
 --------------
 Date: 24 June 2017
