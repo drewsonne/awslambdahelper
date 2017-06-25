@@ -6,7 +6,6 @@ use_plugin('exec')
 use_plugin("python.core")
 use_plugin("python.flake8")
 use_plugin('python.sphinx')
-use_plugin('python.pytddmon')
 use_plugin('python.unittest')
 use_plugin('python.coverage')
 use_plugin("python.distutils")
@@ -35,7 +34,7 @@ def init(project):
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
 
-    project.set_property("coverage_threshold_warn", 50)
+    project.set_property("coverage_threshold_warn", 70)
 
     project.set_property('skip_upload_docs', True)
 

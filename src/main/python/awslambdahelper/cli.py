@@ -143,7 +143,10 @@ class LambdahelperBundler(object):
 
         shutil.copy(self.requirements_path, self.working_directory)
 
-        self.process_setup_cfg()
+        SetupCfgFile(
+            os.path.join(self.target_directory, 'setup.cfg'),
+            os.path.join(self.working_directory, 'setup.cfg')
+        ).load().write()
 
         pip.main([
             "install",
@@ -151,7 +154,7 @@ class LambdahelperBundler(object):
             "-r", self.requirements_path
         ])
 
-        self.create_zip()
+        DirectoryZipFile(self.working_directory).create_archive()
 
     @staticmethod
     def parse_args(args):
@@ -167,56 +170,47 @@ class LambdahelperBundler(object):
             cli_args.requirements_path
         )
 
-    def process_setup_cfg(self):
-        """
-        If the setup.cfg does not exist, or does not have an `[install`] section,
-        create and append a `prefix= ` value.
 
-        :param project_dir:
-        :param working_directory:
+class SetupCfgFile(ConfigParser.ConfigParser, object):
+    """
+    Make sure we have a setup.cfg file with an empty install.prefix for uploading to lambda.
+    """
+
+    def __init__(self, setup_cfg, temp_setup_cfg):
+        """
+        :param setup_cfg: Location of expected path to existing setpu.cfg
+        :type setup_cfg: str
+        :param temp_setup_cfg: Location of temporary setup.cfg file for use during packaging
+        :type temp_setup_cfg: str
+        """
+        super(SetupCfgFile, self).__init__()
+        self.setup_cfg = setup_cfg
+        self.temp_setup_cfg = temp_setup_cfg
+
+    def load(self):
+        """
+        If the existing setup.cfg exists, load it.
+
+        :return:
+        :rtype: awslmabdahelper.cli.SetupCfgFile
+        """
+        if os.path.exists(self.setup_cfg):
+            self.read(self.setup_cfg)
+
+        return self
+
+    def write(self):
+        """
+        Make sure we have an 'install' section, and that the 'prefix' is set to ''.
+
         :return:
         """
-        setup_cfg_path = os.path.join(self.target_directory, 'setup.cfg')
-        temp_cfg_path = os.path.join(self.working_directory, 'setup.cfg')
+        if 'install' not in self.sections():
+            self.add_section('install')
+        self.set('install', 'prefix', '')
 
-        # If we already have a setup.cfg, modify it
-        if os.path.exists(setup_cfg_path):
-            self.update_setup_cfg(setup_cfg_path, temp_cfg_path)
-        # If we don't, just write a blank file out.
-        else:
-            self.create_setup_cfg(temp_cfg_path)
-
-    @staticmethod
-    def update_setup_cfg(cfg_path, build_cfg_path):
-        """
-        Read the existing setup.cfg and add the install.prefix
-
-        :param existing_cfg_path: Path to the existing setup.cfg
-        :type existing_cfg_path: str
-        :param temp_cfg_path:
-        :type temp_cfg_path: str
-        :return:
-        """
-        setup_cfg = ConfigParser.ConfigParser()
-        setup_cfg.read(cfg_path)
-        if 'install' not in setup_cfg.sections():
-            setup_cfg.add_section('install')
-        setup_cfg.set('install', 'prefix', '')
-
-        with open(build_cfg_path, 'w') as fp:
-            setup_cfg.write(fp)
-
-    @staticmethod
-    def create_setup_cfg(temp_cfg_path):
-        """
-        Create base setup.cfg file.
-
-        :param cfg_path: Path to setup.cfg
-        :type cfg_path: str
-        :return:
-        """
-        with open(temp_cfg_path, 'w+') as fp:
-            fp.write("""[install]\nprefix= """)
+        with open(self.temp_setup_cfg) as cfg:
+            super(SetupCfgFile, self).write(cfg)
 
 
 class DirectoryZipFile(ZipFile, object):

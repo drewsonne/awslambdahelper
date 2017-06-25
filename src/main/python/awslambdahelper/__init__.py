@@ -31,7 +31,9 @@ class AWSConfigRule(object):
         :param event: See `Event Attributes
             <http://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules_example-events.html#w2ab1c13c33c27c15c15>`_
             in the AWS Config Developer guide.
+        :type event: dict
         :param context: See `Context Object <http://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html#python-context-object-methods>`_
+        :type context: dict
         :return:
         """
         rule = cls(cls.APPLICABLE_RESOURCES)
