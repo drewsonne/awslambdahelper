@@ -171,8 +171,6 @@ class LambdahelperBundler(object):
         )
 
 
-
-
 class SetupCfgFile(ConfigParser.ConfigParser, object):
     """
     Make sure we have a setup.cfg file with an empty install.prefix for uploading to lambda.
