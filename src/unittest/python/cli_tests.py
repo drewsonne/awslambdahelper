@@ -43,7 +43,7 @@ class TestArgParserTests(unittest.TestCase):
 
         parser = BundlerArgumentParser()
 
-        with self.assertRaises(ArgumentError, parser):
+        with self.assertRaises(ArgumentError):
             parser._parse_known_args([
                 '--directory', 'world',
             ], Namespace(requirements_name='requirements.txt'))
@@ -58,7 +58,7 @@ class TestArgParserTests(unittest.TestCase):
 
         parser = BundlerArgumentParser()
 
-        with self.assertRaises(ArgumentError, parser):
+        with self.assertRaises(ArgumentError):
             parser._parse_known_args([
                 '--directory', 'world',
             ], Namespace(requirements_name='requirements.txt'))
