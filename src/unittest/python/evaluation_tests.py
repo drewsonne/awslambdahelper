@@ -48,4 +48,5 @@ class TestEvaluations(unittest.TestCase):
             'ComplianceResourceId': None,
             'ComplianceResourceType': None,
             'ComplianceType': 'NON_COMPLIANT',
+            'OrderingTimestamp': 'my-timestamp'
         })
