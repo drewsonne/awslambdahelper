@@ -35,7 +35,7 @@ def init(project):
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
 
-    project.set_property("coverage_threshold_warn", 50)
+    project.set_property("coverage_threshold_warn", 75)
 
     project.set_property('skip_upload_docs', True)
 
