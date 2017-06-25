@@ -8,18 +8,22 @@ Private Class and Function Reference
 `lambdahelper-bunder` cli tool
 ------------------------------
 
-.. autofunction:: awslambdahelper.cli.main
 
 .. autoclass:: awslambdahelper.cli.BundlerArgumentParser
   :members:
   :private-members:
 
-.. autofunction:: awslambdahelper.cli.create_zip
+.. autoclass:: awslambdahelper.cli.LambdahelperBundler
+  :members:
+  :private-members:
 
-.. autofunction:: awslambdahelper.cli.zipdir
+.. autoclass:: awslambdahelper.cli.SetupCfgFile
+  :members:
+  :private-members:
 
-.. autofunction:: awslambdahelper.cli.process_setup_cfg
-
+.. autoclass:: awslambdahelper.cli.DirectoryZipFile
+  :members:
+  :private-members:
 
 --------------------
 AWS Config resources
