@@ -33,5 +33,5 @@ deploy:
     local_dir: docs/_build
     acl: public_read
     region: eu-west-1
-  on:
-      branch: master
+    on:
+        branch: master
