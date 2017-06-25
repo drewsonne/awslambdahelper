@@ -17,7 +17,7 @@ version = ".".join(_version)
 default_task = "publish"
 authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
-url = "https://github.com/drewsonne/awslambdahelper"
+url = "http://lambda.awshelpers.com/"
 
 RUNTIME_DEPENDENCIES = ['boto3']
 BUILD_DEPENDENCIES = ['sphinx_rtd_theme','mock','coverage']
