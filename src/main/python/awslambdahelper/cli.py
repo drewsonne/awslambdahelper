@@ -119,6 +119,10 @@ class BundlerArgumentParser(argparse.ArgumentParser):
 
 
 class LambdahelperBundler(object):
+    """
+    Handler for the cli tool to archive code up for Lambda
+    """
+
     def run(self, args=None):
         """
         Entrypoint for our bundler cli tool
@@ -216,6 +220,10 @@ class LambdahelperBundler(object):
 
 
 class DirectoryZipFile(ZipFile, object):
+    """
+    Handles the zipping of an entire directory
+    """
+
     def __init__(self, target):
         zip_destination = target.rstrip(os.path.sep) + '.zip'
 
