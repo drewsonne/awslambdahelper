@@ -27,6 +27,7 @@ deploy:
     on:
       branch: master
   - provider: s3
+    bucket: lambda.awshelpers.com
     skip_cleanup: true
     access_key_id: $AWS_ACCESS_KEY_ID # Set in travis-ci.org dashboard
     secret_access_key: $AWS_SECRET_ACCESS_KEY
