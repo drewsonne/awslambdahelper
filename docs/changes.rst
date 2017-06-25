@@ -1,5 +1,5 @@
-===============================================
-What's new in awslambdahelper |package_version|
-===============================================
+=======================================
+What's new in awslambdahelper |release|
+=======================================
 
 .. include:: ../CHANGELOG.rst
