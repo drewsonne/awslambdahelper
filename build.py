@@ -1,6 +1,6 @@
 from pybuilder.core import use_plugin, init, Author
 
-_version = ('1','1','9')
+_version = ('1','1','10')
 
 use_plugin('exec')
 use_plugin("python.core")
@@ -34,7 +34,7 @@ def init(project):
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
 
-    project.set_property("coverage_threshold_warn", 70)
+    project.set_property("coverage_threshold_warn", 90)
 
     project.set_property('skip_upload_docs', True)
 
