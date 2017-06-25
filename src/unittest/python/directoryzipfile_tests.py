@@ -1,12 +1,9 @@
+# -*- coding: utf-8 -*-
 import os
 import shutil
 import tempfile
 import unittest
-from functools import partial
-from zipfile import ZipFile
-
 from mock import patch, MagicMock, call
-
 from awslambdahelper.cli import DirectoryZipFile
 
 

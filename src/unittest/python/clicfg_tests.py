@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
 from mock import patch, call, MagicMock, mock_open
-
 from awslambdahelper.cli import SetupCfgFile
 
 

@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 import unittest
+from mock import MagicMock
 from awslambdahelper import AWSConfigRule
-from mock import patch, MagicMock, call
 
 
 class ConfigRuleTests(unittest.TestCase):
