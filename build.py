@@ -34,7 +34,7 @@ def init(project):
     project.set_property('flake8_verbose_output', True)
     project.set_property("flake8_break_build", True)
 
-    project.set_property("coverage_threshold_warn", 90)
+    project.set_property("coverage_threshold_warn", 75)
 
     project.set_property('distutils_upload_repository', 'https://upload.pypi.org/legacy/')
     project.set_property("distutils_use_setuptools", True)
