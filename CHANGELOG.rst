@@ -1,3 +1,14 @@
+--------------
+Release 1.1.12
+--------------
+Date: 26 June 2017
+
+~~~~~~~~~~~~~~~~~~~~
+Changes since 1.1.10
+~~~~~~~~~~~~~~~~~~~~
+
+ - Fixed a bug where :code:`lambdahelper-bundler` was not archiving the zip to the correct place
+
 ---------------
 Release: 1.1.10
 ---------------
