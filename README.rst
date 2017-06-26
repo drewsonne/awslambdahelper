@@ -46,6 +46,7 @@ Create a Python class
         return [NonCompliantEvaluation(
           Annotation="This failed because it is only a demo."
         )]
+  lambda_handler = MyConfigRule.handler
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -56,7 +57,7 @@ Setup AWS Lambda handler
 
   >>> import boto3
   >>> boto3.client('lambda').create_function(
-    Handler = "my_lambda_code.MyConfigRule.handler'
+    Handler = "my_lambda_code.handler'
   )
 
 ~~~~~~~~~~~~~~~~~~~~~~
