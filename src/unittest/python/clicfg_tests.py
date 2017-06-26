@@ -49,7 +49,7 @@ class TestCliCfgManipulation(unittest.TestCase):
 
         setup.add_section.assert_not_called()
         setup.set.assert_called_once_with('install', 'prefix', '')
-        m.assert_called_once_with('temp')
+        m.assert_called_once_with('temp', 'w')
 
     @patch('ConfigParser.ConfigParser.write')
     def test_writemissinginstall(self, super_write):
@@ -69,4 +69,4 @@ class TestCliCfgManipulation(unittest.TestCase):
 
         setup.add_section.assert_called_once_with('install')
         setup.set.assert_called_once_with('install', 'prefix', '')
-        m.assert_called_once_with('temp')
+        m.assert_called_once_with('temp', 'w')
