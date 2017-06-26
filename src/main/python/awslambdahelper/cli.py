@@ -21,7 +21,7 @@ class BundlerArgumentParser(argparse.ArgumentParser):
         Add the cli argument schema
         """
         super(BundlerArgumentParser, self).__init__()
-        self.add_argument('--directory', help='Path to the directory to bundle for AWS lambda.')
+        self.add_argument('--directory', help='Path to the directory to bundle for AWS lambda.', required=True)
         self.add_argument('--requirements_name', default='requirements.txt',
                           help='Name of the requirements file in the target directory')
 
@@ -148,7 +148,9 @@ class LambdahelperBundler(object):
             "-r", self.requirements_path
         ])
 
-        DirectoryZipFile(self.working_directory).create_archive()
+        temp_archive = DirectoryZipFile(self.working_directory).create_archive().archive_path
+
+        shutil.move(temp_archive, self.target_directory + ".zip")
 
     def copy_lambda_package_files(self):
         """
@@ -168,7 +170,10 @@ class LambdahelperBundler(object):
         :param args:
         :return:
         """
-        cli_args = BundlerArgumentParser().parse_args(sys.argv[1:] if args is None else args)
+        parser = BundlerArgumentParser()
+        cli_args = parser.parse_args(sys.argv[1:] if args is None else args)
+        if not cli_args.directory:
+            parser.print_help()
         return (
             cli_args.directory,
             tempfile.mkdtemp(),
@@ -214,7 +219,7 @@ class SetupCfgFile(ConfigParser.ConfigParser, object):
             self.add_section('install')
         self.set('install', 'prefix', '')
 
-        with open(self.temp_setup_cfg) as cfg:
+        with open(self.temp_setup_cfg, 'w') as cfg:
             super(SetupCfgFile, self).write(cfg)
 
 
@@ -241,6 +246,8 @@ class DirectoryZipFile(ZipFile, object):
         """
         self.zipdir(self.source_path, self.source_path.rstrip('/') + '/')
 
+        return self
+
     def zipdir(self, path, zip_path_prefix):
         """
         Recursively walk our directory path, and add files to the zip archive.
@@ -259,7 +266,3 @@ class DirectoryZipFile(ZipFile, object):
                 archive_file = source_file.replace(zip_path_prefix, '')
                 print "    Adding file: '" + archive_file + "'"
                 self.write(source_file, archive_file)
-
-
-if __name__ == '__main__':
-    LambdahelperBundler().run()
