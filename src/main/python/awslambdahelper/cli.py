@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+"""
+Classes encapsulationg the functionality for the lambd
+"""
 import ConfigParser
 import zipfile
 
@@ -123,6 +127,11 @@ class LambdahelperBundler(object):
     Handler for the cli tool to archive code up for Lambda
     """
 
+    def __init__(self):
+        self.target_directory = None
+        self.working_directory = None
+        self.requirements_path = None
+
     def run(self, args=None):
         """
         Entrypoint for our bundler cli tool
@@ -158,8 +167,8 @@ class LambdahelperBundler(object):
 
         :return:
         """
-        for file in glob.glob(self.target_directory + os.path.sep + "*.py"):
-            shutil.copy(file, self.working_directory)
+        for file_name in glob.glob(self.target_directory + os.path.sep + "*.py"):
+            shutil.copy(file_name, self.working_directory)
 
         shutil.copy(self.requirements_path, self.working_directory)
 
@@ -240,8 +249,6 @@ class DirectoryZipFile(ZipFile, object):
         Given a target_directory to compress, and a working_directory to place the files in, compress them
         in a zip archive.
 
-        :param target_directory:
-        :param working_directory:
         :return:
         """
         self.zipdir(self.source_path, self.source_path.rstrip('/') + '/')
@@ -253,10 +260,7 @@ class DirectoryZipFile(ZipFile, object):
         Recursively walk our directory path, and add files to the zip archive.
 
         :param path: Path to walk which contains our files to be added to the zip archive.
-        :param ziph: zipfile handler
-        :type ziph: zipfile.ZipFile
         :param zip_path_prefix:
-        :type basestring
         :return:
         """
         # ziph is zipfile handle
