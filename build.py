@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from pybuilder.core import use_plugin, init, Author
 
 _version = ('1','1','12')
@@ -18,6 +19,9 @@ default_task = "publish"
 authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
 url = "http://lambda.awshelpers.com/"
+
+with open('README.rst') as fp:
+    description = fp.read()
 
 RUNTIME_DEPENDENCIES = ['boto3']
 BUILD_DEPENDENCIES = ['sphinx_rtd_theme','mock','coverage']
