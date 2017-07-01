@@ -1,6 +1,6 @@
-============================
-API Reference |github_link|_
-============================
+=============
+API Reference
+=============
 
 -----
 Rules
@@ -44,5 +44,3 @@ InsufficientDataEvaluation
 .. autoclass:: awslambdahelper.InsufficientDataEvaluation
   :members:
 
-.. |github_link| image:: github.svg
-.. _github_link: http://github.com/drewsonne/awslambdahelper/
