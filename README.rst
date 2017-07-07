@@ -1,5 +1,5 @@
 ======================
-awslambdahelper 1.1.12
+awslambdahelper 1.1.13
 ======================
 
 .. image:: https://www.quantifiedcode.com/api/v1/project/bb53f496a1cc45f780342fc973270298/badge.svg
@@ -57,7 +57,7 @@ Setup AWS Lambda handler
 
   >>> import boto3
   >>> boto3.client('lambda').create_function(
-    Handler = "my_lambda_code.handler'
+    Handler = "my_lambda_code.lambda_handler'
   )
 
 ~~~~~~~~~~~~~~~~~~~~~~

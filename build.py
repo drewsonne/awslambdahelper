@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pybuilder.core import use_plugin, init, Author
 
-_version = ('1', '1', '12')
+_version = ('1', '1', '13')
 
 use_plugin('exec')
 use_plugin("python.core")
@@ -20,7 +20,7 @@ authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
 url = "http://lambda.awshelpers.com/"
 
-RUNTIME_DEPENDENCIES = ['boto3']
+RUNTIME_DEPENDENCIES = ['boto3', 'backoff']
 BUILD_DEPENDENCIES = ['sphinx_rtd_theme', 'mock', 'coverage', 'wheel']
 
 
