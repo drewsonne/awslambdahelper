@@ -1,8 +1,12 @@
 import abc
 import json, boto3
+import botocore.exceptions
+
+import backoff
 
 from awslambdahelper.evaluation import AWSConfigEvaluation
 
+MAX_BACKOFF_TRIES = 100
 
 class AWSConfigRule(object):
     """
@@ -152,6 +156,21 @@ class AWSConfigRule(object):
             )
 
         return violations
+
+    @backoff.on_exception(backoff.expo,
+                          botocore.exceptions.ClientError,
+                          max_tries=MAX_BACKOFF_TRIES,
+                          jitter=backoff.full_jitter)
+    def _aws_call(self, callable):
+        """
+        Wrapper to ease testing.
+        Decorators make mocking functions that just little bit harder. For this reason, pass
+        a callable into this method which can handle our AWS calls.
+
+        :param callable:
+        :return:
+        """
+        return callable()
 
     def find_violation_config_change(self, rule_parameters, config):
         """
