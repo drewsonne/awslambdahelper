@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from pybuilder.core import use_plugin, init, Author
 
-_version = ('1', '1', '12')
+_version = ('1', '1', '13')
 
 use_plugin('exec')
 use_plugin("python.core")
