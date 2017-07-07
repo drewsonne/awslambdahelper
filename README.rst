@@ -1,6 +1,6 @@
-=====================================
-awslambdahelper 1.1.11 |github_link|_
-=====================================
+======================
+awslambdahelper 1.1.12
+======================
 
 .. image:: https://www.quantifiedcode.com/api/v1/project/bb53f496a1cc45f780342fc973270298/badge.svg
   :target: https://www.quantifiedcode.com/app/project/bb53f496a1cc45f780342fc973270298
@@ -70,5 +70,3 @@ Create AWS Config Rule
 That's it! For a more indepth guide, `read the docs <http://lambda.awshelpers.com/>`_.
 
 
-.. |github_link| image:: github.svg
-.. _github_link: http://github.com/drewsonne/awslambdahelper/
