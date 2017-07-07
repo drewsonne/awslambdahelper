@@ -48,3 +48,12 @@ class ConfigRuleTests(unittest.TestCase):
         MockHandler.lambda_handler.assert_called_once_with(
             {'event': None}, {'context': None}
         )
+
+    def test__aws_call(self):
+        callable_payload = lambda: 'TestResponse'
+
+        rule = AWSConfigRule()
+        self.assertEqual(
+            rule._aws_call(callable_payload),
+            'TestResponse'
+        )

@@ -20,7 +20,7 @@ authors = (Author("Drew J. Sonne", "drew.sonne@gmail.com", ),)
 license = "LGLP"
 url = "http://lambda.awshelpers.com/"
 
-RUNTIME_DEPENDENCIES = ['boto3']
+RUNTIME_DEPENDENCIES = ['boto3', 'backoff']
 BUILD_DEPENDENCIES = ['sphinx_rtd_theme', 'mock', 'coverage', 'wheel']
 
 
