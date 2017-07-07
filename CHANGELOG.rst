@@ -1,35 +1,46 @@
---------------
-Release 1.1.12
---------------
-Date: 26 June 2017
+------------
+[unreleased]
+------------
 
-~~~~~~~~~~~~~~~~~~~~
-Changes since 1.1.10
-~~~~~~~~~~~~~~~~~~~~
+---------------------
+[1.1.13] - 07-07-2017
+---------------------
+
+~~~~~
+Added
+~~~~~
+
+ - :code:`awslambdahelper.AWSConfigRule._aws_call` which handles API backoffs if there are rate limiting exceptions.
+
+---------------------
+[1.1.12] - 26-06-2017
+---------------------
+
+~~~~~~~
+Changed
+~~~~~~~
 
  - Fixed a bug where :code:`lambdahelper-bundler` was not archiving the zip to the correct place
 
----------------
-Release: 1.1.10
----------------
-Date: 25 June 2017
+---------------------
+[1.1.10] - 25-06-2017
+---------------------
 
-~~~~~~~~~~~~~~~~~~~
-Changes since 1.1.6
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+Changed
+~~~~~~~
 
  - Expanded test coverage
  - Expanded the documentation
  - Refactored the cli tool to improve test coverage
 
---------------
-Release: 1.1.6
---------------
-Date: 24 June 2017
+--------------------
+[1.1.6] - 24-06-2017
+--------------------
 
-~~~~~~~~~~~~~~~~~~~
-Changes since 1.0.0
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+Changed
+~~~~~~~
 
  - Expanded test coverage
  - Expanded the documentation and added a short user guide.
