@@ -11,6 +11,8 @@ awslambdahelper 1.1.13
   :target: https://travis-ci.org/drewsonne/awslambdahelper
 .. image:: https://img.shields.io/pypi/v/awslambdahelper.svg
   :target: https://pypi.python.org/pypi/awslambdahelper
+.. image:: https://scrutinizer-ci.com/g/drewsonne/awslambdahelper/badges/quality-score.png?b=master
+  :target: https://scrutinizer-ci.com/g/drewsonne/awslambdahelper/?branch=master
 
 Abstracts the more mundane aspects of lambda resources
 
