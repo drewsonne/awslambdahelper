@@ -53,4 +53,7 @@ class ConfigRuleTests(unittest.TestCase):
         callable_payload = lambda: 'TestResponse'
 
         rule = AWSConfigRule()
-        self.assertEqual(rule._aws_call(callable_payload), 'TestResponse')
+        self.assertEqual(
+            rule._aws_call(callable_payload),
+            'TestResponse'
+        )
