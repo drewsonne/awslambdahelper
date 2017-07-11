@@ -1,12 +1,13 @@
-import abc
-import json, boto3
-import botocore.exceptions
+import json
 
 import backoff
+import boto3
+import botocore.exceptions
 
 from awslambdahelper.evaluation import AWSConfigEvaluation
 
 MAX_BACKOFF_TRIES = 100
+
 
 class AWSConfigRule(object):
     """
@@ -97,11 +98,15 @@ class AWSConfigRule(object):
         if self.is_config_change_call:
 
             configuration_item = invoking_event["configurationItem"]
-            evaluation_responses = self.evaluate_compliance(
-                config=configuration_item,
-                rule_parameters=rule_parameters,
-                event=event
-            )
+            # If the resource has been deleted.
+            if event['eventLeftScope']:
+                evaluation_responses = [NotApplicableEvaluation("Resource has been deleted")]
+            else:
+                evaluation_responses = self.evaluate_compliance(
+                    config=configuration_item,
+                    rule_parameters=rule_parameters,
+                    event=event
+                )
 
             for evaluation_response in evaluation_responses:
                 evaluation = evaluation_response.set(
@@ -121,6 +126,7 @@ class AWSConfigRule(object):
                     OrderingTimestamp=invoking_event["notificationCreationTime"]
                 ).to_dict())
 
+        # There's a max number of evaluations we can apply to put_evaluations at once. It's 100.
         chunk_size = 100
         for evaluation_chunk in range(0, len(evaluations), chunk_size):
             self.put_evaluations(
