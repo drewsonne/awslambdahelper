@@ -22,7 +22,7 @@ Configuration Change Rule
 >>> from awsconfig_lambdahelper.configrule import AWSConfigRule
 >>> from awsconfig_lambdahelper.evaluation import CompliantEvaluation,NonCompliantEvaluation
 >>>
->>> # A schedule AWS config rule
+>>> # A ConfigurationChange AWS config rule
 >>> class MyCustomConfigurationChangeRule(AWSConfigRule):
 ...    def find_violation_config_change(self, config, rule_parameters):
 ...        rule_responses = apply_my_rule_to_a_resource(config)
